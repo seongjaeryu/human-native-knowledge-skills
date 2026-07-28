@@ -1,6 +1,6 @@
 # human-native-knowledge-skills (hnk) — AI entry point
 
-> STATUS: pre-v1 (M3: orchestrator and templates landed; scripts land at M4, guides at M5, examples at M6).
+> STATUS: pre-v1 (M5: scripts and guides landed; examples land at M6).
 > This file is the single entry point for AI agents consuming this repository.
 
 ## What this repository is
@@ -74,16 +74,17 @@ template says so):
 - templates/context/gitignore-block.txt (appended to the target .gitignore, idempotent via markers)
 - templates/living/index.md (create-wiki path only; designated docs/ uses pointer mapping instead)
 
-scripts/ — lands at M4:
+scripts/:
 
-- scripts/hnk.mjs — single-entry zero-dependency script, copied into targets (lands at M4; until then, follow the rule-based core of skill/08 §5 by hand)
-- scripts/self-test.mjs — this repository's test suite, never copied (lands at M4)
+- scripts/hnk.mjs — single-entry zero-dependency script, copied into targets
+- scripts/self-test.mjs — this repository's test suite, never copied
+- .github/workflows/ci.yml — Node 18/20/22 test matrix (repository root)
 
-guides/ — lands at M5:
+guides/ — harness-independent reference documents:
 
-- guides/viewers/obsidian.md, guides/viewers/quartz.md (land at M5)
-- guides/enforcement/eslint.md, guides/enforcement/generic-grep.md (land at M5)
-- guides/storage/cloudflare-r2.md (lands at M5)
+- guides/viewers/obsidian.md, guides/viewers/quartz.md
+- guides/enforcement/eslint.md, guides/enforcement/generic-grep.md
+- guides/storage/cloudflare-r2.md
 
 examples/ — lands at M6:
 
