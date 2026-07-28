@@ -208,7 +208,7 @@ lands with the script) asserts the rules this document owns:
 | `version` is an integer ≥ 1 | §2.1 |
 | `frozen_commits` has exactly keys `v1..v(N-1)` when `version: N` | §2.1 — every past version is addressable |
 | Version History section exists with one entry per past version whenever `version > 1` | §2.3 — every freeze has a reason |
-| Recorded hashes resolve in local history (when git is available) | §2.4 |
+| Recorded hashes resolve in local history (when git is available) — **audit-level**: checked by the target audit procedure, not by `hnk.mjs verify` in v1 | §2.4 |
 | Living layer exists at the location recorded in `.context/_global/project-profile.md` | §5 |
 
 These checks operationalize items N2 and N3 of

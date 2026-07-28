@@ -20,7 +20,7 @@ This is not a template you clone. It is a **skill an AI agent consumes by URL**.
 
 ## Quickstart
 
-> **Status: pre-v1.** The skill documents are being built milestone by milestone. The prompt below will work once v1.0.0 is tagged.
+> **Status: v1.0.0 release candidate.** All skill documents, templates, the zero-dependency script, guides, and a real-install demo are complete; the prompt below works once the repository is pushed and the release is tagged.
 
 Paste this to your AI agent (Claude Code, Cursor, or any agent that can fetch URLs and write files):
 
@@ -29,6 +29,13 @@ Analyze https://github.com/seongjaeryu/human-native-knowledge-skills
 and apply its context operating system to this project.
 Follow orchestrator.md. Start with the Level 1 setup interview.
 ```
+
+What the installed system gives you, day to day:
+
+- **Two interviews, both under a minute** — a setup interview at install, and a one-line working-mode confirmation before each piece of work. The way of working is always agreed and recorded, never assumed.
+- **A session archive that pays for itself** — every "one human + one AI" session leaves a committed result card (decisions, reasons, deltas, affected files); raw transcripts stay local and git-ignored, cryptographically linked to their cards. Ask "what happened with X?" or run `node scripts/hnk.mjs report` for a digest.
+- **Specifications that lead with diagrams** — node graphs and flowcharts before prose, with stable NODE-IDs mapped to code (or to document sections in non-code projects).
+- **Honest records by construction** — reconstructed transcripts are never labeled as captured, every binary asset carries a required text description, and secrets are redacted at write time and scanned before upload.
 
 ## Repository map
 

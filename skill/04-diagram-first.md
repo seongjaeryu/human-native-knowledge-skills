@@ -111,9 +111,10 @@ NODE-[DOMAIN]-[NUMBER]
 Identifier rules:
 
 - **Project-wide uniqueness.** The domain segment is the namespace; a NODE-ID
-  is unique across the whole project. Verification (`hnk.mjs verify`) checks
-  for collisions, operationalizing audit item
-  [N2](../core/audit.md#n--nth-degree-devices-transfer-time-understanding).
+  is unique across the whole project. The **target audit procedure** checks
+  for collisions (audit item
+  [N2](../core/audit.md#n--nth-degree-devices-transfer-time-understanding));
+  `hnk.mjs verify` does not scan diagram nodes in v1.
 - **Never renumber, never reuse.** A pivot may add nodes or retire them, but an
   existing node keeps its NODE-ID for life. Retired NODE-IDs stay reserved so
   that Version History entries and session-card deltas
@@ -188,13 +189,14 @@ Mapping rules:
 - A macro node with no implementing code (external system, human step) states
   that in the prose section anchored to its NODE-ID, so an auditor never
   mistakes "unmapped" for "unimplemented".
-- Enforcement is by guidance, not by tool dependency: the target audit
-  procedure and verification grep the mapping in both directions (every
-  diagram NODE-ID accounted for; every `@spec-node` resolving to a live
-  diagram node) — the operational form of audit item
+- Enforcement is by guidance, not by tool dependency: the **target audit
+  procedure** greps the mapping in both directions (every diagram NODE-ID
+  accounted for; every `@spec-node` resolving to a live diagram node) — the
+  operational form of audit item
   [N2](../core/audit.md#n--nth-degree-devices-transfer-time-understanding) —
   following the enforcement-as-guides principle of
-  [`05-dictionary-and-naming.md`](05-dictionary-and-naming.md).
+  [`05-dictionary-and-naming.md`](05-dictionary-and-naming.md). This mapping
+  grep is audit-level, not part of `hnk.mjs verify` in v1.
 
 ## 5. Non-code projects — what diagrams depict
 

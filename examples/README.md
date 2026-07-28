@@ -51,9 +51,10 @@ the demo as a whole.
 
 On the generating machine the final `node scripts/hnk.mjs verify` was fully
 green (0 failures, 0 warnings). Running it **inside this copy** reports two
-failures proposing the `raw-lost` transition plus a content-unreachable
-warning — because the git-ignored raws and the binary payload genuinely do
-not exist here. That is the machine-local semantics of verification working
+failures proposing the `raw-lost` transition plus three warnings (a
+content-unreachable warning and two benign "ignored directory missing —
+created on first use" advisories) — because the git-ignored raws and the
+binary payload genuinely do not exist here. That is the machine-local semantics of verification working
 as specified ([skill/08 §12](../skill/08-conversation-archive.md#12-verification-hooks),
 [skill/09 §7](../skill/09-visual-assets.md#7-verification) check 3), not a
 defect in the instance: the cards' `status: local-only` describes the

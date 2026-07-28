@@ -302,7 +302,7 @@ session.
 | --- | --- | --- |
 | subset grammar (§3) | frontmatter the zero-dependency parser cannot round-trip | N2 |
 | duplicate `id` | the machine layer's path-independent references become ambiguous | N2 |
-| dead semantic pointers (§4) | a knowledge graph edge an nth-degree consumer cannot follow | N2 |
+| dead semantic pointers (§4) — file targets; `#anchor` resolution is audit-level in v1 | a knowledge graph edge an nth-degree consumer cannot follow | N2 |
 | `llm.txt` staleness (§5.3) | the entry point misrepresents the current state | N4 |
 
 All four checks run inside `node scripts/hnk.mjs verify`; the audit items are
