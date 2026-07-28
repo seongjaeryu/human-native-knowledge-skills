@@ -154,7 +154,7 @@ audience: "product team of four; Korean-first readers"
 dictionary_seeded: true
 hnk_version: "1.0.0"
 hnk_commit: a1b2c3d
-defaults: {mode: confirm-spec-changes-only, depth: full-okf-topic}
+defaults: {mode: confirm-spec-changes-only, depth: full-topic}
 summary: "Level 1 record: mixed project, docs/ as Living layer, no storage backend, Korean local-language column active."
 ---
 ```
@@ -188,13 +188,13 @@ enums, and field names are frozen at milestone M2.
 | --- | --- | --- | --- |
 | Q1 | Goal and deliverable type | free-text goal + `specification` \| `implementation` \| `research` \| `hotfix` | `goal`, `deliverable` |
 | Q2 | Autonomy level | `confirm-each-change` \| `confirm-spec-changes-only` \| `autonomous-with-report` | `mode` |
-| Q3 | Documentation depth | `full-okf-topic` \| `lightweight` | `depth` — decides where the record lives (§7) |
+| Q3 | Documentation depth | `full-topic` \| `lightweight` | `depth` — decides where the record lives (§7) |
 | Q4 | Visual requirements | `node-graph-and-flowchart` \| `flowchart-only` \| `none` | `visuals` |
 | Q5 | Archive granularity | `card-per-milestone` \| `card-per-goal` | `archive` |
 
 The `deliverable` enum is deliberately coarse: an unusual goal takes the
 nearest behavior profile, and the free-text `goal` line carries the nuance.
-Naming note: the machine token `full-okf-topic` mirrors the owning file name
+Naming note: the machine token `full-topic` mirrors the owning file name
 [`03-okf.md`](03-okf.md); like a file name, an enum token is machine layer,
 not prose — in prose write "full Open Knowledge Format topic"
 (cf. the naming note of [`03-okf.md`](03-okf.md) and Full Naming in
@@ -224,9 +224,9 @@ proposal of [§6](#6-convergence--the-one-line-proposal) presents the final merg
 
 | `deliverable` | `mode` | `depth` | `visuals` | `archive` |
 | --- | --- | --- | --- | --- |
-| `specification` | `confirm-spec-changes-only` | `full-okf-topic` | `node-graph-and-flowchart` | `card-per-milestone` |
-| `implementation` | `confirm-spec-changes-only` | `full-okf-topic` | `node-graph-and-flowchart` | `card-per-milestone` |
-| `research` | `autonomous-with-report` | `full-okf-topic` | `node-graph-and-flowchart` | `card-per-goal` |
+| `specification` | `confirm-spec-changes-only` | `full-topic` | `node-graph-and-flowchart` | `card-per-milestone` |
+| `implementation` | `confirm-spec-changes-only` | `full-topic` | `node-graph-and-flowchart` | `card-per-milestone` |
+| `research` | `autonomous-with-report` | `full-topic` | `node-graph-and-flowchart` | `card-per-goal` |
 | `hotfix` | `confirm-each-change` | `lightweight` | `none` | `card-per-goal` |
 
 The hotfix row encodes a deliberate trade: documentation depth is lowered, so
@@ -234,7 +234,7 @@ the compensating first-degree device is raised confirmation frequency — the
 understanding budget moves from the record to the conversation, it is never
 dropped.
 
-**Consistency rule (frozen).** `depth: full-okf-topic` requires
+**Consistency rule (frozen).** `depth: full-topic` requires
 `visuals: node-graph-and-flowchart` — a full topic owns an `ai-spec.md`,
 whose leading visual block is mandatory per
 [`04-diagram-first.md` §2](04-diagram-first.md#2-the-leading-visual-block-of-ai-specmd).
@@ -310,7 +310,7 @@ flowchart TD
 
 The proposal must name all five answers and where each came from (profile
 default, restored from a card, or proposed deviation). Normative example:
-`Level 2 proposal — goal: harden retry handling; deliverable: implementation; mode: confirm-spec-changes-only; depth: full-okf-topic; visuals: node-graph-and-flowchart; archive: card-per-milestone (profile defaults; same mode as the last session on this topic). Confirm, or name what to change.`
+`Level 2 proposal — goal: harden retry handling; deliverable: implementation; mode: confirm-spec-changes-only; depth: full-topic; visuals: node-graph-and-flowchart; archive: card-per-milestone (profile defaults; same mode as the last session on this topic). Confirm, or name what to change.`
 The AI expands questions proactively only on deviation signals: a new
 deliverable type for the topic, a shifted goal, or friction recorded in a
 previous card's follow-ups.
@@ -321,7 +321,7 @@ previous card's follow-ups.
 
 | `depth` | The mode record lives in | Written when |
 | --- | --- | --- |
-| `full-okf-topic` | `interview.md` (`type: interview`) in the topic folder ([`02-context-architecture.md` §4.1](02-context-architecture.md#41-file-roles)) | at confirmation, before work starts |
+| `full-topic` | `interview.md` (`type: interview`) in the topic folder ([`02-context-architecture.md` §4.1](02-context-architecture.md#41-file-roles)) | at confirmation, before work starts |
 | `lightweight` | the `mode` field of the session card frontmatter — the card is created as a draft at session start under the draft-card rule of [08-conversation-archive.md](08-conversation-archive.md) | at session start |
 
 Card fields themselves (`mode`, the `interview` pointer, and all others) are
@@ -341,7 +341,7 @@ In addition to the common fields of [`03-okf.md` §2.1](03-okf.md#21-common-fiel
 | `goal` | one line, quoted |
 | `deliverable` | Q1 enum value |
 | `mode` | Q2 enum value |
-| `depth` | Q3 enum value (`full-okf-topic` by construction — recorded anyway so the answer set is complete without inference) |
+| `depth` | Q3 enum value (`full-topic` by construction — recorded anyway so the answer set is complete without inference) |
 | `visuals` | Q4 enum value |
 | `archive` | Q5 enum value |
 | `confirmed` | date of the latest confirmation, `YYYY-MM-DD` |
