@@ -111,7 +111,9 @@ flowchart TD
   `node scripts/hnk.mjs archive new --title <title> [--domain <d>] [--topic <t>] --mode <mode>`
   (or write the card directly under this floor): frontmatter complete,
   `mode` prerecorded, `ended: null`. The agreed autonomy level must exist on
-  disk while work is underway.
+  disk while work is underway. `archive new` prefills `meta` from the
+  `HNK_AUTHOR` and `HNK_AGENT` environment variables when they are set;
+  otherwise fill `meta: {author, agent}` when writing the card.
   ([skill/08 §5]({{HNK_SPEC_BASE}}/skill/08-conversation-archive.md#5-the-session-lifecycle-two-stage-writing-snapshots-recovery).)
 - **R7 — Obey the recorded autonomy level.** Before working on a topic, read
   its `interview.md` (or restore per R4). When the goal shifts, propose an
