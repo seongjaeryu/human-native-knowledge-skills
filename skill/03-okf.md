@@ -58,6 +58,7 @@ pre-existing files, see the adoption rule in §5.1). This field set is a
 | `id` | unique string | Unique across the project; kebab-case (`skill-03-okf`, `artifact-0001-notification-spec`). Timestamped id schemes for sessions and media are owned by [08-conversation-archive.md](08-conversation-archive.md) and [09-visual-assets.md](09-visual-assets.md). |
 | `type` | one value from §2.2 | Determines which specification owns the document's additional fields. |
 | `status` | `draft` \| `active` \| `frozen` \| `deprecated` | Common value set. A type's owning specification may replace it (session cards do — see [08-conversation-archive.md](08-conversation-archive.md)). Freeze and deprecation semantics are owned by [06-lifecycle-and-versioning.md](06-lifecycle-and-versioning.md). |
+| *(omissions)* | — | A type's owning specification may **omit** `version` and `related` where versioning a single record is meaningless: session cards ([08-conversation-archive.md](08-conversation-archive.md)) and the regenerated indexes (`archive-index`, `media-index`). Recorded here per audit item D3; no other omissions are sanctioned. |
 | `version` | integer ≥ 1 | Increment and Version History rules are owned by [06-lifecycle-and-versioning.md](06-lifecycle-and-versioning.md). |
 | `related` | inline list of ids | Document **ids**, not paths — the machine layer is path-independent; the body uses clickable relative links instead (§4). Convention: list the core document ids plus the ids of every document this one directly cites. |
 | `summary` | one line, double-quoted | Consumed verbatim by index builders and `llm build`. One line is a grammar rule (§3), not a style preference. |
@@ -104,7 +105,9 @@ Anything not listed below is outside the subset and forbidden.
    entries, a closing `---` line.
 2. Each entry is exactly one line of `key: value`, at depth 1. Keys are
    lowercase ASCII letters, digits, and underscores; no duplicate keys.
-3. Scalar values are one-line strings, numbers, or `true`/`false`, quoted per
+3. Scalar values are one-line strings, numbers, `true`/`false`, or the
+   reserved unquoted literal `null` ("not yet" sentinel — never quoted, never
+   a user string value), quoted per
    §3.2.
 4. Lists are inline flow style only — `[a, b, c]` on one line. Items are
    plain scalars; no nesting. The empty list `[]` is legal.

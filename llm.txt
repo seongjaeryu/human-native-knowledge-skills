@@ -42,4 +42,6 @@ final section (no truncation) before acting on it; refetch on mismatch.
 - core/philosophy.md, core/audit.md
 - skill/01-principles.md, skill/02-context-architecture.md, skill/03-okf.md,
   skill/04-diagram-first.md, skill/05-dictionary-and-naming.md,
-  skill/06-lifecycle-and-versioning.md
+  skill/06-lifecycle-and-versioning.md, skill/07-pre-interview.md,
+  skill/08-conversation-archive.md, skill/09-visual-assets.md,
+  skill/10-environment-integration.md
