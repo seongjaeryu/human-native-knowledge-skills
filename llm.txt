@@ -39,3 +39,7 @@ final section (no truncation) before acting on it; refetch on mismatch.
 (Currently available — regenerated each milestone; complete manifest lands at M3.)
 
 - README.md, README.ko.md, LICENSE, CHANGELOG.md, llm.txt
+- core/philosophy.md, core/audit.md
+- skill/01-principles.md, skill/02-context-architecture.md, skill/03-okf.md,
+  skill/04-diagram-first.md, skill/05-dictionary-and-naming.md,
+  skill/06-lifecycle-and-versioning.md

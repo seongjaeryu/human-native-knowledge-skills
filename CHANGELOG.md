@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Build milestones
+
+This repository was built in stages M0–M6 (bootstrap, core + curriculum
+01–06, improvement specifications 07–10 with interface freeze, orchestrator +
+templates, scripts, guides, examples + end-to-end verification). Skill
+documents reference these stage names when they mark an interface as frozen.
+
 ## Release rule
 
 Before every release tag:
