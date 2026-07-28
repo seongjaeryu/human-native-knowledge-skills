@@ -137,8 +137,15 @@ flowchart TD
   [`skill/03` §5.1](skill/03-okf.md#51-target-projects-generated).
   Otherwise create `wiki/` from [`templates/living/`](templates/living/).
 - **audit-existing variant:** step 4 is entirely non-destructive — existing
-  documents stay where they are; pointer documents map them into the
-  structure; the existing `docs/` becomes the Living layer.
+  documents stay where they are and the existing `docs/` becomes the Living
+  layer. **Pointer mapping means, concretely:** (a) frontmatter proposed for
+  each designated document (propose-then-confirm, per
+  [`skill/03` §5.1](skill/03-okf.md#51-target-projects-generated)),
+  (b) the History Annotation rule appended to each
+  ([`skill/06` §5](skill/06-lifecycle-and-versioning.md#5-living-layer-sync-with-history-annotation)),
+  (c) the documents entering the `llm build` scope, and (d) the designation
+  recorded in the profile's `living_layer` answer. No other artifact is
+  created.
 - Template instantiation may create missing files but never replaces
   existing ones; conflicts become proposed diffs.
 - **Done when:** `.context/` matches the

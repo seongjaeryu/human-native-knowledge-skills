@@ -1,6 +1,8 @@
 <!-- ai-instruction: archive index template — instantiate VERBATIM (no placeholders)
-     at .context/_archive/index.md, seeded EMPTY at install: frontmatter, title, and
-     the header row only. This file is FULLY REGENERATED from card frontmatter by
+     at .context/_archive/index.md, seeded EMPTY at install (this content matches the
+     script's canonical empty render byte-for-byte, so the first verify is clean).
+     The header-row table appears with the first card. This file is FULLY
+     REGENERATED from card frontmatter by
      `node scripts/hnk.mjs archive index` (or by the AI applying the same rules under
      the rule-based core of skill/08 §5) — it has no hand-maintained fields; never
      hand-edit it. Per the sanctioned omission of skill/03 §2.1, this type omits
@@ -14,8 +16,7 @@ summary: "Archive index: one row per session card, newest first; fully regenerat
 
 # Archive Index
 
-| id | date | summary | domain/topic | mode | status | raw_fidelity | visibility |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+No session cards yet.
 
 <!-- ai-instruction: row rules (frozen, skill/08 §11) — one row per card, newest
      first. The id cell begins with an inline anchor and links to the card file:

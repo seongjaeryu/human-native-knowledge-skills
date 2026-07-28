@@ -1,0 +1,13 @@
+{
+  "name": "coffee-tracker",
+  "version": "0.1.0",
+  "description": "Tiny CLI that records espresso brews to a log and prints summaries.",
+  "type": "module",
+  "bin": {
+    "coffee-tracker": "src/tracker.mjs"
+  },
+  "scripts": {
+    "report": "node src/report.mjs"
+  },
+  "license": "MIT"
+}

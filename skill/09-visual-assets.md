@@ -212,7 +212,7 @@ namespace — the namespace uses the registered alias `hnk`
 
 | Command | Shape | Effect |
 | --- | --- | --- |
-| add | `node scripts/hnk.mjs visuals add <file> [--domain <domain>] [--topic <topic>] [--alt <text>]` | places the file under `files/` per §2, computes `sha256` and `bytes`, appends the entry. **`alt` is required**: prompted for interactively when the flag is missing; a hard error in non-interactive runs |
+| add | `node scripts/hnk.mjs visuals add <file> [--domain <domain>] [--topic <topic>] [--alt <text>]` | **moves** the source file under `files/` per §2 (moved, not copied — the payload lives in one place), computes `sha256` and `bytes`, appends the entry. **`alt` is required**: prompted for interactively when the flag is missing; a hard error in non-interactive runs |
 | index | `node scripts/hnk.mjs visuals index` | merge-regeneration per §4.3 |
 | verify | `node scripts/hnk.mjs visuals verify` | runs the checks of §7; also included in the project-wide `node scripts/hnk.mjs verify` |
 | upload | `node scripts/hnk.mjs visuals upload [--provider r2] [--only <id>] [--dry-run]` | uploads payloads of entries with `remote: null` (§8) |

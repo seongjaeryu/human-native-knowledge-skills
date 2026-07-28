@@ -262,8 +262,8 @@ flowchart LR
   `docs/` as the Living layer, its documents may lack frontmatter. Adding
   frontmatter is proposed during installation (propose-then-confirm — never a
   silent rewrite of user files). Until it is added, `llm build` falls back to
-  filename plus first heading for such documents, and `verify` reports them
-  as advisory warnings, not failures.
+  filename plus first heading for such documents and emits an advisory
+  warning — never a failure.
 - **Built from:** the frontmatter of every document in scope (`id`, `type`,
   `status`, `summary`, `related`). This is why `summary` is a one-line
   machine-subset field.

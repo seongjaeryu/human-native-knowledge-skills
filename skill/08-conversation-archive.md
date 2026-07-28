@@ -276,7 +276,7 @@ All commands are subcommands of the single-entry script `node scripts/hnk.mjs` (
 
 | Command | Effect |
 | --- | --- |
-| `node scripts/hnk.mjs archive new --title <title> [--domain <d>] [--topic <t>] [--mode <m>]` | generate the id (§3, slug from the title), create the draft card (§5) |
+| `node scripts/hnk.mjs archive new --title <title> [--domain <d>] [--topic <t>] [--mode <m>]` | generate the id (§3, slug from the title), create the draft card (§5). The optional `interview` field is written at card completion under the rule-based floor — the command does not set it |
 | `node scripts/hnk.mjs archive index` | regenerate `_archive/index.md` from card frontmatter (§11) |
 | `node scripts/hnk.mjs archive verify` | archive-scope checks (§12); also runs inside global `verify` |
 | `node scripts/hnk.mjs archive capture --transcript <path> [--format <f>]` | normalize a tool transcript into a `captured` raw (§4.2), applying redaction (§7) |
