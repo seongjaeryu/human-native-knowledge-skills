@@ -1,0 +1,37 @@
+<!-- ai-instruction: media index template — instantiate VERBATIM (no placeholders)
+     at .context/_media/index.md, seeded EMPTY at install: frontmatter and title
+     only. One index per project — there are no per-domain media indexes
+     (skill/09 §4). Entries are appended by `node scripts/hnk.mjs visuals add`
+     (which requires `alt` at registration) or by the AI applying the same rules;
+     a binary must be registered here BEFORE it is referenced anywhere
+     (skill/09 §2). Per the sanctioned omission of skill/03 §2.1, this type omits
+     `version` and `related`. Remove this comment and the one below the title. -->
+---
+id: media-index
+type: media-index
+status: active
+summary: "Media index: one entry per binary asset; payloads are git-ignored, this index is the committed record — alt is mandatory on every entry."
+---
+
+# Media Index
+
+<!-- ai-instruction: entry format (frozen, skill/09 §4.1) — one `##` heading per
+     entry; the heading text is the media id `media-YYYYMMDD-HHMMSS-slug`, whose
+     GitHub-style anchor equals the id — documents reference the asset only through
+     that anchor, never by raw path (skill/09 §5). Each heading is followed by one
+     field table (columns `| Field | Value |`) with exactly these rows, in this
+     order:
+       type          — image | video | document | other
+       path_local    — path relative to .context/_media/ (files/...)
+       sha256        — 64 lowercase hex characters of the payload bytes
+       bytes         — integer payload size
+       created       — ISO 8601 instant of the registration moment (same instant as the id timestamp)
+       referenced_by — inline list of project-root-relative path#anchor items; [] when unreferenced
+       remote        — null until upload, then the remote object URL
+       alt           — REQUIRED, never empty: one to three sentences on one line; a
+                       clone without the binary must stay understandable (audit H2)
+     Field ownership (frozen, skill/09 §4.3): regeneration by `visuals index` is a
+     MERGE, never a destructive rewrite — it recalculates only sha256, bytes, and
+     referenced_by, and preserves alt, remote, type, path_local, created verbatim;
+     losing an alt or a remote on regeneration is a defect. Entries whose payload
+     has vanished are kept, not deleted — the entry is the surviving record. -->

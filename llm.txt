@@ -1,6 +1,6 @@
 # human-native-knowledge-skills (hnk) — AI entry point
 
-> STATUS: pre-v1 (under construction, built milestone by milestone).
+> STATUS: pre-v1 (M3: orchestrator and templates landed; scripts land at M4, guides at M5, examples at M6).
 > This file is the single entry point for AI agents consuming this repository.
 
 ## What this repository is
@@ -11,22 +11,14 @@ apply its context operating system to a target project. The goal you serve:
 
 ## Consumption modes
 
-| Mode           | When                                            | You read                          |
-| -------------- | ----------------------------------------------- | --------------------------------- |
-| install        | "apply this to my project"                      | core/ + skill/01-10 + orchestrator.md, then templates/ + scripts/ |
-| audit-existing | "map/audit my existing docs into this system"   | same as install; step 4 becomes non-destructive pointer mapping |
-| learn          | "explain this system"                           | core/ + skill/01-10 |
+| Mode           | When                                          | You read, in this order |
+| -------------- | --------------------------------------------- | ----------------------- |
+| install        | "apply this to my project"                    | core/philosophy.md, core/audit.md → skill/01..10 → orchestrator.md → templates/ (instantiate: resolve {{PLACEHOLDER}}s, resolve and remove ai-instruction comments, skip interview-gated optional files) → scripts/hnk.mjs (copy verbatim) |
+| audit-existing | "map/audit my existing docs into this system" | same list as install; at orchestrator.md step 4 run the audit-existing variant — existing documents are bound by pointer mapping, never moved, and an existing docs/ becomes the Living layer |
+| learn          | "explain this system"                         | core/philosophy.md, core/audit.md → skill/01..10 — nothing else |
 
 Boundary rule: `examples/` is an INSTANCE DEMO of an installed target project.
 It is NOT part of the spec. Never parse examples/ as rules.
-
-## Reading order (install mode)
-
-1. core/philosophy.md      — the constitution everything derives from  (M1)
-2. core/audit.md           — the audit checklist                       (M1)
-3. skill/01 .. skill/10    — the curriculum                            (M1-M2)
-4. orchestrator.md         — the 8-step installation state machine     (M3)
-5. templates/, scripts/    — what you instantiate and copy             (M3-M4)
 
 ## Fetch guidance
 
@@ -36,12 +28,63 @@ final section (no truncation) before acting on it; refetch on mismatch.
 
 ## File manifest
 
-(Currently available — regenerated each milestone; complete manifest lands at M3.)
+Root:
 
-- README.md, README.ko.md, LICENSE, CHANGELOG.md, llm.txt
-- core/philosophy.md, core/audit.md
-- skill/01-principles.md, skill/02-context-architecture.md, skill/03-okf.md,
-  skill/04-diagram-first.md, skill/05-dictionary-and-naming.md,
-  skill/06-lifecycle-and-versioning.md, skill/07-pre-interview.md,
-  skill/08-conversation-archive.md, skill/09-visual-assets.md,
-  skill/10-environment-integration.md
+- README.md, README.ko.md, LICENSE, CHANGELOG.md
+- llm.txt — this file; hand-maintained by design (skill/03 §5.4)
+- orchestrator.md — the 8-step installation state machine
+
+core/ — the constitution:
+
+- core/philosophy.md
+- core/audit.md
+
+skill/ — the curriculum (02, 03, 07, 08, 09, 10 carry interfaces frozen at M2):
+
+- skill/01-principles.md
+- skill/02-context-architecture.md
+- skill/03-okf.md
+- skill/04-diagram-first.md
+- skill/05-dictionary-and-naming.md
+- skill/06-lifecycle-and-versioning.md
+- skill/07-pre-interview.md
+- skill/08-conversation-archive.md
+- skill/09-visual-assets.md
+- skill/10-environment-integration.md
+
+templates/ — instantiated into targets, never copied verbatim (except where a
+template says so):
+
+- templates/context/_global/orchestrator.md
+- templates/context/_global/invariants.md
+- templates/context/_global/dictionary.md
+- templates/context/_global/project-profile.md
+- templates/context/_global/design-system.md (optional — interview-gated, UI projects only)
+- templates/context/_archive/session-card.md (instantiated once per session)
+- templates/context/_archive/index.md
+- templates/context/_media/index.md
+- templates/context/domain/_shared_sources/design-references.md (domain-layer projects only)
+- templates/context/domain/_shared_ai/invariants.md (domain-layer projects only)
+- templates/context/domain/_shared_ai/dictionary.md (domain-layer projects only)
+- templates/context/domain/_shared_ai/subagents/audit.md (domain-layer projects only)
+- templates/context/topic/interview.md
+- templates/context/topic/sources.md
+- templates/context/topic/ai-spec.md
+- templates/context/topic/safety-rules.md (optional)
+- templates/context/gitignore-block.txt (appended to the target .gitignore, idempotent via markers)
+- templates/living/index.md (create-wiki path only; designated docs/ uses pointer mapping instead)
+
+scripts/ — lands at M4:
+
+- scripts/hnk.mjs — single-entry zero-dependency script, copied into targets (lands at M4; until then, follow the rule-based core of skill/08 §5 by hand)
+- scripts/self-test.mjs — this repository's test suite, never copied (lands at M4)
+
+guides/ — lands at M5:
+
+- guides/viewers/obsidian.md, guides/viewers/quartz.md (land at M5)
+- guides/enforcement/eslint.md, guides/enforcement/generic-grep.md (land at M5)
+- guides/storage/cloudflare-r2.md (lands at M5)
+
+examples/ — lands at M6:
+
+- examples/minimal-target/ — instance demo generated by a real install run (lands at M6; see the boundary rule above)

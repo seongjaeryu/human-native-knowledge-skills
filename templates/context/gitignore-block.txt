@@ -1,0 +1,4 @@
+# hnk:begin (managed block — do not edit between markers)
+.context/_archive/sessions/
+.context/_media/files/
+# hnk:end
