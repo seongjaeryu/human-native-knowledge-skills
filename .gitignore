@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+*.swp
+
+# Node (this repo is zero-dependency; node_modules should never exist)
+node_modules/
+
+# Local-only working notes (never published)
+.local/

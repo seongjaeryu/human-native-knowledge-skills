@@ -1,0 +1,41 @@
+# human-native-knowledge-skills (hnk) — AI entry point
+
+> STATUS: pre-v1 (under construction, built milestone by milestone).
+> This file is the single entry point for AI agents consuming this repository.
+
+## What this repository is
+
+A SKILL, not a template. You (the AI agent) read this repository by URL and
+apply its context operating system to a target project. The goal you serve:
+"the accumulation of knowledge that both humans and AI can easily understand."
+
+## Consumption modes
+
+| Mode           | When                                            | You read                          |
+| -------------- | ----------------------------------------------- | --------------------------------- |
+| install        | "apply this to my project"                      | core/ + skill/01-10 + orchestrator.md, then templates/ + scripts/ |
+| audit-existing | "map/audit my existing docs into this system"   | same as install; step 4 becomes non-destructive pointer mapping |
+| learn          | "explain this system"                           | core/ + skill/01-10 |
+
+Boundary rule: `examples/` is an INSTANCE DEMO of an installed target project.
+It is NOT part of the spec. Never parse examples/ as rules.
+
+## Reading order (install mode)
+
+1. core/philosophy.md      — the constitution everything derives from  (M1)
+2. core/audit.md           — the audit checklist                       (M1)
+3. skill/01 .. skill/10    — the curriculum                            (M1-M2)
+4. orchestrator.md         — the 8-step installation state machine     (M3)
+5. templates/, scripts/    — what you instantiate and copy             (M3-M4)
+
+## Fetch guidance
+
+Fetch raw file contents (e.g. https://raw.githubusercontent.com/seongjaeryu/human-native-knowledge-skills/main/<path>),
+not rendered HTML pages. After fetching a file, confirm it ends with an intact
+final section (no truncation) before acting on it; refetch on mismatch.
+
+## File manifest
+
+(Currently available — regenerated each milestone; complete manifest lands at M3.)
+
+- README.md, README.ko.md, LICENSE, CHANGELOG.md, llm.txt
