@@ -219,7 +219,11 @@ flowchart TD
   interview answers with reasons), Deltas, Affected files (everything this
   installation created), Follow-ups — check self-sufficiency
   ([`skill/08` §4.6](skill/08-conversation-archive.md#46-the-self-sufficiency-acceptance-criterion)),
-  and fill `ended`. The two stages collapse into one pass here only because
+  and fill `ended`. When the card is created with `archive new`, the id and
+  `started` record the command time — not the session's true beginning;
+  record the true start in the Goal section (and the raw header), so the
+  record stays honest without fighting the id-equals-started rule. The two
+  stages collapse into one pass here only because
   the archive store did not exist at session start; every later session
   drafts at start. Write the normalized raw under `_archive/sessions/`,
   then run `node scripts/hnk.mjs archive index` and

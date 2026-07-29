@@ -2058,7 +2058,8 @@ function parseArgs(argv, boolFlags = new Set()) {
 async function main(argv, log = console.log) {
   const versionErr = nodeVersionError();
   if (versionErr) { log(versionErr); return 1; }
-  const { opts, positional } = parseArgs(argv, new Set(['dry-run']));
+  const { opts, positional } = parseArgs(argv, new Set(['dry-run', 'help']));
+  if (opts.help === true) { log(USAGE); return 0; }
   const root = resolveRoot(typeof opts.root === 'string' ? opts.root : undefined);
   const [ns, sub, ...rest] = positional;
 

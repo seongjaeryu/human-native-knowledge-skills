@@ -21,6 +21,28 @@ Before every release tag:
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [1.0.0] — 2026-07-30
+
+First release: the complete skill — constitution, curriculum, installation
+state machine, templates, the zero-dependency toolchain, guides, and a
+real-install demo.
+
+### Release verification
+
+- CI matrix green on Node 18 / 20 / 22 (GitHub Actions run 30472920855).
+- **Real-URL install verified** (release gate 3-1): a fresh consuming session
+  given only the GitHub URL fetched 24 files (343,410 bytes, zero refetches),
+  confirmed `scripts/hnk.mjs`, the gitignore block, and `llm.txt` byte-identical
+  over the URL path (sha256), and completed install steps 2–8 on a scratch
+  project with final `verify` at 0 failures / 0 warnings; installed structure
+  matches `examples/minimal-target` modulo the expected work-session artifacts.
+- Three friction items found by that run were fixed before tagging: the
+  archive-index template now matches the script's canonical empty render,
+  `--help` prints usage, and orchestrator step 8 clarifies the
+  `started`-timestamp rule for late-created cards.
+
 ### Added
 
 - M0 bootstrap: LICENSE (MIT), bilingual README, changelog, `llm.txt` skeleton, `.gitignore`.
