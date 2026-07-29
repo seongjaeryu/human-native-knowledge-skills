@@ -7,8 +7,11 @@
      identical to the global invariants file: id pattern INV-<CODE>-<NUMBER>, <CODE>
      registered in the dictionary before first use, Id cell beginning with an inline
      anchor lowercased (<a id="inv-pay-001"></a>INV-PAY-001), ids never renumbered or
-     reused, deciding session card linked in the Decided-by cell. Resolve every
-     placeholder and delete every ai-instruction comment. -->
+     reused, deciding session card linked in the Decided-by cell, Level column with
+     exactly two values per hnk skill 02 §3.3 (strict-negative = prohibition, blocks at
+     every autonomy level; hard = requirement that must hold before work completes) —
+     preferences never enter this table. Resolve every placeholder and delete every
+     ai-instruction comment. -->
 <!-- ai-instruction: {{HNK_SPEC_BASE}} = browsable base URL of the installed hnk release,
      pinned to the hnk_commit recorded in project-profile.md. -->
 ---
@@ -32,5 +35,5 @@ conflict is resolved with the human and the resolution is recorded here, in
 the row that caused it. Rows change through propose-then-confirm and are
 recorded in the deciding session's card.
 
-| Id | Invariant | Reason | Decided by |
-| --- | --- | --- | --- |
+| Id | Invariant | Level | Reason | Decided by |
+| --- | --- | --- | --- | --- |

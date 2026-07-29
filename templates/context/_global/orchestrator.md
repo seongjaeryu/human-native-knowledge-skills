@@ -228,3 +228,27 @@ flowchart TD
   what failed, and proposed fix. The verdict is pass only with zero
   failures on D-items and H-items; N/F-items may carry warnings with
   follow-ups.
+
+## Rule collisions and rule harvesting
+
+- **R21 — Resolve rule collisions in the recorded order.** When two rules
+  genuinely conflict, resolve in order, stopping at the first step that
+  decides: ① document kind (invariant > topic safety-rule > standing rules
+  and preferences), ② layer (global before domain; the only exception is an
+  explicit, recorded dictionary override), ③ the judgment criterion — which
+  resolution better serves first-degree or nth-degree understanding, ④ a
+  surviving tie is a genuine decision: surface it to the human per this
+  session's recorded autonomy level, and record the resolution in this
+  session's card Key decisions **and** in the row that caused it. Never
+  resolve a collision silently.
+  ([skill/02 §3.2]({{HNK_SPEC_BASE}}/skill/02-context-architecture.md#32-rule-collisions-the-resolution-order).)
+- **R22 — Harvest explicit rejections into rules.** When the human
+  explicitly forbids or rejects an approach ("do not create temporary mode
+  flags"), that sentence is a candidate rule: propose — at that moment or at
+  session end — an invariant row (or a topic `safety-rules.md` row when the
+  constraint is temporary) with its Level, its Reason, and this session's
+  card as Decided-by. Registration is propose-then-confirm, never
+  automatic; record the proposal and its outcome in the card's Key
+  decisions. Repeated human philosophy graduates into the constitution as
+  confirmed language with reasons — not as drifting numbers.
+  ([skill/02 §3.3]({{HNK_SPEC_BASE}}/skill/02-context-architecture.md#33-invariant-rows-schema-levels-and-rejection-harvesting).)

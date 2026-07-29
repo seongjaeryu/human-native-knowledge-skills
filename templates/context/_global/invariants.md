@@ -13,6 +13,13 @@
      invariants.md#inv-sec-001. Never renumber or reuse a retired id. In the Decided-by
      cell, link the session card that decided the invariant once one exists; "—" is legal
      for rows seeded at installation. -->
+<!-- ai-instruction: the Level column takes exactly two values (hnk skill 02 §3.3):
+     strict-negative = a prohibition, blocks the action at every autonomy level;
+     hard = a requirement that must hold before work completes. Preferences and style
+     guidance never enter this table — they belong in the orchestrator standing rules,
+     design-system.md, or the dictionary. No numeric weights: levels are categorical
+     language so a later reader understands the rule, not a score that decides without
+     explaining. -->
 ---
 id: invariant-global
 type: invariant
@@ -29,7 +36,7 @@ never silently contradict — this document. Rows are added and changed through
 propose-then-confirm, and every change is recorded in the deciding session's
 card.
 
-| Id | Invariant | Reason | Decided by |
-| --- | --- | --- | --- |
-| <a id="inv-sec-001"></a>INV-SEC-001 | Every request that reads or writes user data completes [authentication](dictionary.md#authentication) first. | A single unauthenticated path invalidates every access guarantee the project makes. | — |
-| <a id="inv-data-001"></a>INV-DATA-001 | A [device](dictionary.md#device) record is deactivated, never deleted, so historical [context](dictionary.md#context) stays resolvable. | A later reader must be able to resolve every past reference; deletion would break the record. | — |
+| Id | Invariant | Level | Reason | Decided by |
+| --- | --- | --- | --- | --- |
+| <a id="inv-sec-001"></a>INV-SEC-001 | Every request that reads or writes user data completes [authentication](dictionary.md#authentication) first. | hard | A single unauthenticated path invalidates every access guarantee the project makes. | — |
+| <a id="inv-data-001"></a>INV-DATA-001 | A [device](dictionary.md#device) record is deactivated, never deleted, so historical [context](dictionary.md#context) stays resolvable. | strict-negative | A later reader must be able to resolve every past reference; deletion would break the record. | — |

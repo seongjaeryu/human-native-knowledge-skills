@@ -22,7 +22,36 @@ Before every release tag:
 
 ## [Unreleased]
 
-Nothing yet.
+### Added — toward v1.1.0
+
+**Rule-collision handling, from the project's first community feedback.**
+The observed problem: two same-tier content rules (performance versus
+simplicity, say) had no explicit tiebreaker, and in `autonomous-with-report`
+mode the agent carried that collision with no human in the loop — a real gap,
+correctly diagnosed by an external proposal for `weight` (numeric 0.0–1.0)
+and `constraint_level` metadata. The structural fix adopts the proposal in
+reshaped form and records why each part was taken or declined
+(`skill/02` version 1 → 2, Version History):
+
+- `Level` column on invariant rows — the categorical survivor of
+  `constraint_level`, two values only (`strict-negative` | `hard`);
+  preferences stay out of invariants by membership rule.
+- Explicit four-step resolution order (`skill/02` §3.2): document kind →
+  layer → the core §10 criterion → surface a surviving tie to the human and
+  record it where it arose.
+- Rejection-harvesting standing rule (`skill/02` §3.3, target orchestrator
+  R21–R22): an explicit human rejection during work becomes a *proposed*
+  invariant or safety-rule row — propose-then-confirm, recorded in the
+  session card.
+- Declined, with reasons recorded: numeric weights (a score decides a
+  collision without explaining it — arithmetic is not understanding, and an
+  unmeasured decimal claims precision that does not exist), automatic
+  feedback-driven weight drift (the silent rule change audit item F2
+  forbids), and threshold-based prompt pruning (a rule recorded as in force
+  must actually be loaded).
+
+`examples/` regeneration for the template change follows at the v1.1.0
+release per the release rule.
 
 ## [1.0.0] — 2026-07-30
 

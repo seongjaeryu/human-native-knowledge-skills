@@ -2,7 +2,7 @@
 id: skill-02-context-architecture
 type: skill
 status: active
-version: 1
+version: 2
 related: [core-philosophy, core-audit, skill-01-principles, skill-03-okf, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-08-conversation-archive, skill-09-visual-assets]
 summary: "Structural specification of an installed target project: three-level .context/ inheritance, central archive and media stores, flat topic folders, the Living layer, and the gitignore contract."
 ---
@@ -137,6 +137,77 @@ made in the Level 1 interview ([`07-pre-interview.md`](07-pre-interview.md))
 and recorded in `project-profile.md`. Promoting a single-domain project later
 is a plain folder move (topics into a new `[domain]/`) plus pointer updates;
 `hnk.mjs verify` catches any pointer left dangling by the move.
+
+### 3.2 Rule collisions: the resolution order
+
+Two rules of the same tier can collide in practice (a performance rule
+against a simplicity rule, say) — and in `autonomous-with-report` mode no
+human is in the loop at the moment of collision. The resolution order below
+makes the outcome reconstructable for every later reader (nth degree) without
+replacing the reasoning with arithmetic; the decision to keep resolution
+categorical rather than numeric is recorded in this document's Version
+History.
+
+Resolve in this order, stopping at the first step that decides:
+
+1. **Document kind.** An invariant outranks a topic safety-rule; a
+   safety-rule outranks standing rules and preferences (orchestrator rules,
+   `design-system.md`, dictionary style rules). Membership in `invariants.md`
+   *is* the priority statement — there is no rank inside the file.
+2. **Layer.** Global before domain, per §3. The only sanctioned exception
+   remains the explicit, recorded dictionary override of
+   [`05-dictionary-and-naming.md` §3.1](05-dictionary-and-naming.md).
+3. **The judgment criterion.** If kind and layer tie, apply
+   [core §10](../core/philosophy.md#10-the-judgment-criterion) directly:
+   which resolution better serves first-degree or nth-degree understanding?
+4. **Surface a surviving tie.** A collision that survives all three steps is
+   a genuine decision: surface it to the human per the session's recorded
+   autonomy level ([`07-pre-interview.md` §4.2](07-pre-interview.md)), record
+   the resolution in the session card's Key decisions
+   ([`08-conversation-archive.md` §4.5](08-conversation-archive.md#45-card-body--frozen-interface)),
+   and — if the collision will recur — register the outcome as a rule row
+   with its reason, where the conflict arose (audit item
+   [D3](../core/audit.md#d--derivation-every-rule-earns-its-existence)).
+
+### 3.3 Invariant rows: schema, levels, and rejection harvesting
+
+This document owns the invariant row schema (per the type-ownership table of
+[`03-okf.md` §2.2](03-okf.md#22-the-type-enum)). Each row of an
+`invariants.md` table carries:
+
+| Column | Content |
+| --- | --- |
+| Id | `INV-<CODE>-<NUMBER>` with an inline lowercase anchor; the code registered in the dictionary before first use; never renumbered or reused |
+| Invariant | the rule, in Full Naming vocabulary, with semantic pointers |
+| **Level** | `strict-negative` \| `hard` (below) |
+| Reason | why this rule exists — which understanding it protects |
+| Decided by | the session card that decided the row (`—` for installation seeds) |
+
+**Level values — categorical language, not scores:**
+
+| Level | Meaning | Agent behavior |
+| --- | --- | --- |
+| `strict-negative` | a prohibition — "never do X" | blocks the action at every autonomy level; no trade-off may override it |
+| `hard` | a requirement that must hold | must be satisfied before work completes; verified before a card's `ended` is filled |
+
+Only these two values exist. Preferences and style guidance do not belong in
+an invariants table — they live in the orchestrator standing rules,
+`design-system.md`, and the dictionary. Numeric priority scores were
+considered and declined: a score decides a collision without explaining it,
+which deletes exactly the reason a later reader needs (see Version History).
+
+**Rejection harvesting.** When the human explicitly forbids or rejects an
+approach during work ("don't create temporary mode flags", "never bypass the
+queue"), that sentence is a candidate rule. The standing rule: the agent
+**proposes** — at that moment or at session end — an invariant row (or a
+topic `safety-rules.md` row, when the constraint is temporary) carrying the
+level, the reason, and this session's card as Decided-by. Registration is
+propose-then-confirm, never automatic; the proposal and its outcome are
+recorded in the card's Key decisions. This mirrors the dictionary
+row-proposal rule of
+[`05-dictionary-and-naming.md` §4](05-dictionary-and-naming.md#4-ai-behavior)
+rule 3 — repeated human philosophy graduates into the constitution as
+confirmed language with its reason attached.
 
 ## 4. The flat topic folder
 
@@ -301,3 +372,25 @@ procedure must honor:
   instantiation may create missing files but must never replace existing
   ones. Conflicting template updates are proposed as diffs
   (propose-then-confirm), never applied silently.
+
+## Version History
+
+- **version 2** — 2026-07-30. Added §3.2 (rule-collision resolution order)
+  and §3.3 (invariant row schema with the `Level` column and rejection
+  harvesting). **Why:** the first community feedback on this project
+  correctly diagnosed a real gap — two same-tier content rules had no
+  explicit tiebreaker, and in `autonomous-with-report` mode the agent
+  carried that collision with no human in the loop. **How:** the feedback's
+  proposal was adopted in reshaped form. Its categorical `constraint_level`
+  survives as the two-value `Level` column on invariant rows; its numeric
+  `weight` (0.0–1.0) was declined because a score decides a collision
+  without explaining it — arithmetic is not understanding
+  ([core §10](../core/philosophy.md#10-the-judgment-criterion)), an
+  unmeasured decimal claims precision that does not exist
+  ([core §9](../core/philosophy.md#9-honesty-of-the-record)), and
+  feedback-driven automatic weight drift is the silent rule change audit
+  item F2 forbids. Its automated-extraction loop survives as rejection
+  harvesting — with propose-then-confirm in place of automatic
+  registration, so the constitution grows as confirmed language with
+  reasons, not drifting numbers.
+- **version 1** — initial structural specification.
