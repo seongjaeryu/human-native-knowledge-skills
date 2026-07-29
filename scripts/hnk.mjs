@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import process from 'node:process';
+import { spawnSync } from 'node:child_process';
 
 // ---------------------------------------------------------------------------
 // Node version gate
@@ -938,6 +939,30 @@ function archiveVerify(root, rep) {
       const m = /^(.+)\.full\.md$/.exec(name);
       if (!m) continue;
       if (!cardIds.has(m[1])) rep.warn(`recovery sweep: orphan raw with no card: .context/_archive/sessions/${name} (08 §5)`);
+    }
+  }
+
+  // uncarded work (advisory, 08 §12): commits newer than the newest card
+  // that never touched the archive — work done outside any carded session.
+  const newestCardMs = cards.reduce((max, c) => {
+    const t = Date.parse(String(cardValue(c, 'ended') ?? cardValue(c, 'started') ?? ''));
+    return Number.isFinite(t) && t > max ? t : max;
+  }, 0);
+  if (newestCardMs > 0 && exists(path.join(root, '.git'))) {
+    const since = new Date(newestCardMs).toISOString();
+    /** @param {string[]} args @returns {string[]|null} */
+    const gitLines = (args) => {
+      const r = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
+      return r.status === 0 && typeof r.stdout === 'string' ? r.stdout.split('\n').filter(Boolean) : null;
+    };
+    const all = gitLines(['log', '--pretty=%H', `--since=${since}`]);
+    const carded = gitLines(['log', '--pretty=%H', `--since=${since}`, '--', '.context/_archive']);
+    if (all && carded) {
+      const cardedSet = new Set(carded);
+      const uncarded = all.filter((h) => !cardedSet.has(h)).length;
+      if (uncarded > 0) {
+        rep.warn(`uncarded work: ${uncarded} commit(s) newer than the newest session card touch no archive file — propose a retro-card, honestly labeled reconstructed (08 §5; orchestrator R3)`);
+      }
     }
   }
 

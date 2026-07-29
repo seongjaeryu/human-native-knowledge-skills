@@ -2,7 +2,7 @@
 id: skill-08-conversation-archive
 type: skill
 status: active
-version: 1
+version: 2
 related: [core-philosophy, core-audit, skill-01-principles, skill-02-context-architecture, skill-03-okf, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-09-visual-assets, skill-10-environment-integration]
 summary: "The session archive: three artifacts (raw, card, index), the frozen identifier and card interfaces, the normalized raw format with mandatory redaction, upload behavior, and the three-layer consumption model."
 ---
@@ -400,6 +400,7 @@ Checks this document contributes to `archive verify` and the global `verify`:
 | card body missing a §4.5 section | the result document is incomplete | H3 |
 | **local-only accumulation warning** | more than 20 `local-only` raws, or the oldest older than 30 days (advisory defaults): a machine loss would orphan them — nudge toward upload or backup | N1 |
 | index out of date relative to card frontmatter | regenerate via `archive index` | N4 |
+| **uncarded work** (advisory): commits newer than the newest card that touch no file under `_archive/` | work happened outside any carded session — the archive has a blind spot; propose a retro-card, honestly labeled `reconstructed` (orchestrator R3) | N1 |
 
 ## 13. Freeze summary
 
@@ -414,3 +415,21 @@ Checks this document contributes to `archive verify` and the global `verify`:
 | Command shapes: `archive new` / `index` / `verify` / `capture` (v1 formats: `claude-code-jsonl`, `markdown`, `plaintext`) / `upload`; `report` | §8 |
 | Upload behavior: environment variables, secret-scan gate, 100 MiB single-PUT cap, two-retry backoff, no partial state, key-line substitution; multipart is v2 | §9 |
 | Index frontmatter, required columns, and row anchors | §11 |
+
+## Version History
+
+- **version 2** — 2026-07-30. Added the uncarded-work verification check
+  (§12) and its recovery-sweep counterpart (orchestrator R3). **Why:**
+  community feedback proposed an automated extraction architecture
+  (post-commit hooks feeding git history to an unattended sub-agent that
+  generates rule files). The correct observation inside it: commits are an
+  archive-independent signal, and work committed outside any carded session
+  previously escaped the archive with no signal anywhere — a blind spot in
+  the system's own core promise (audit item N1). **How:** the signal was
+  adopted mechanically — `verify` compares commit history against the newest
+  card and warns, and the session-start sweep proposes a retro-card. The
+  unattended generation itself was declined: an LLM writing rule files
+  without propose-then-confirm is an unverified second producer — the exact
+  debt generator this system exists to prevent (audit F2; core §9) — and a
+  sample script in another language would break the Node-builtins-only rule.
+- **version 1** — initial archive specification (M2 freeze).

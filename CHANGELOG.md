@@ -50,6 +50,21 @@ reshaped form and records why each part was taken or declined
   forbids), and threshold-based prompt pruning (a rule recorded as in force
   must actually be loaded).
 
+**Uncarded-work detection, from the same feedback thread's follow-up
+(automated extraction architecture).** The observed problem: work committed
+outside any carded session escaped the archive with no signal anywhere — a
+blind spot in the system's own core promise. The structural fix adopts the
+proposal's one mechanical insight (commits as an archive-independent signal)
+and declines its engine (`skill/08` version 1 → 2, Version History): `verify`
+now warns when commits newer than the newest session card touch no archive
+file, and the session-start sweep (orchestrator R3) proposes a retro-card,
+honestly labeled `reconstructed`. Declined with reasons recorded: an
+unattended sub-agent generating rule files (an unverified second producer —
+the exact debt generator this system exists to prevent; silent rule changes
+forbidden by audit F2), a Python sample script (Node-builtins-only rule), and
+auto-populated weights (declined above). Evidence: self-test 30/30 including
+a new git-fixture test for the check.
+
 `examples/` regeneration for the template change follows at the v1.1.0
 release per the release rule.
 

@@ -82,8 +82,12 @@ flowchart TD
 - **R3 — Recovery sweep.** Check [../_archive/](../_archive/index.md) for
   draft cards (`ended: null`) from past sessions and `../_archive/sessions/`
   for orphan raws with no matching card; propose completing the abandoned
-  card or generating one from the orphan raw before new work begins.
-  ([skill/08 §5]({{HNK_SPEC_BASE}}/skill/08-conversation-archive.md#5-the-session-lifecycle-two-stage-writing-snapshots-recovery).)
+  card or generating one from the orphan raw before new work begins. Also
+  check for **uncarded work** — commits newer than the newest session card
+  that touch no archive file (surfaced by `node scripts/hnk.mjs verify`):
+  propose a retro-card for it, honestly labeled `reconstructed`.
+  ([skill/08 §5]({{HNK_SPEC_BASE}}/skill/08-conversation-archive.md#5-the-session-lifecycle-two-stage-writing-snapshots-recovery),
+  [§12]({{HNK_SPEC_BASE}}/skill/08-conversation-archive.md#12-verification-hooks).)
 - **R4 — Minimal automatic restore, topic-keyed only.** When the session
   continues an existing topic, read that topic's newest completed card and
   restore only the `mode` and the latest Key decisions — nothing else is

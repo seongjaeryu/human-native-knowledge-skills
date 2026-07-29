@@ -681,3 +681,55 @@ test('end-to-end target project flow', async (t) => {
     assert.ok(r.out.includes('Usage:'));
   });
 });
+
+test('archive verify: uncarded-work warning from git commits', (t) => {
+  const root = makeFixture();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const git = (args) => spawnSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', ...args], { cwd: root, encoding: 'utf8' });
+  if ((git(['init', '-q']).status ?? 1) !== 0) { t.skip('git unavailable'); return; }
+
+  // A completed card whose session ended in the past.
+  const id = 'session-20200101-120000-old-work';
+  const raw = `format: hnk-raw v1\nsession: ${id}\nfidelity: reconstructed\n\n## note\n\nold work\n`;
+  fs.mkdirSync(path.join(root, '.context/_archive/sessions'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.context/_archive/sessions', `${id}.full.md`), raw);
+  const sha = hnk.sha256Hex(Buffer.from(raw));
+  fs.writeFileSync(path.join(root, '.context/_archive', `${id}.md`), [
+    '---',
+    `id: ${id}`,
+    'type: session',
+    'started: 2020-01-01T12:00:00Z',
+    'ended: 2020-01-01T13:00:00Z',
+    'meta: {author: t, agent: t@t}',
+    'mode: confirm-spec-changes-only',
+    'visibility: private',
+    'status: local-only',
+    'raw_fidelity: reconstructed',
+    `raw_local: .context/_archive/sessions/${id}.full.md`,
+    'raw_remote: null',
+    `raw_sha256: ${sha}`,
+    'summary: "Old carded work."',
+    '---',
+    '',
+    '## Goal', '', 'g', '',
+    '## Key decisions', '', 'k', '',
+    '## Deltas', '', 'd', '',
+    '## Affected files', '', 'a', '',
+    '## Follow-ups', '', 'f', '',
+  ].join('\n'));
+  runCli(root, ['archive', 'index']);
+
+  // Commit 1 touches the archive (the carded freeze-point commit): no warning.
+  git(['add', '-A']);
+  git(['commit', '-q', '-m', 'freeze point incl. archive']);
+  const r1 = runCli(root, ['archive', 'verify']);
+  assert.ok(!r1.out.includes('uncarded work'), r1.out);
+
+  // Commit 2 touches only source: uncarded-work warning, still exit 0 (advisory).
+  fs.writeFileSync(path.join(root, 'src.mjs'), 'export const x = 1;\n');
+  git(['add', 'src.mjs']);
+  git(['commit', '-q', '-m', 'direct change, no card']);
+  const r2 = runCli(root, ['archive', 'verify']);
+  assert.equal(r2.code, 0, r2.out);
+  assert.ok(r2.out.includes('uncarded work: 1 commit(s)'), r2.out);
+});
