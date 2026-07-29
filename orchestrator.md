@@ -228,13 +228,20 @@ flowchart TD
   drafts at start. Write the normalized raw under `_archive/sessions/`,
   then run `node scripts/hnk.mjs archive index` and
   `node scripts/hnk.mjs llm build`.
+- **Demonstrate retrieval once, immediately.** Before closing, show the
+  human the value they just gained: name one decision from the installation
+  (for example the Living-layer location, or a dictionary row), tell them
+  *"ask me why — the answer is in the card, not my memory"*, and run
+  `node scripts/hnk.mjs report` once so they see the digest surface. Ten
+  seconds of demonstration moves the payoff from "some future session" to
+  "right now" ([`skill/08` §10](skill/08-conversation-archive.md#10-the-consumption-model)).
 - **Immediately propose the first Level 2 work interview**
   ([`skill/07` §4–6](skill/07-pre-interview.md#4-level-2--the-work-interview)),
-  citing the installation card by id in the proposal — the first
-  demonstration of on-demand retrieval
-  ([`skill/08` §10](skill/08-conversation-archive.md#10-the-consumption-model)).
+  citing the installation card by id in the proposal — on-demand retrieval
+  in actual use.
 - **Done when:** the card is completed and indexed, `llm.txt` is
-  regenerated, and the Level 2 proposal has been presented.
+  regenerated, the retrieval demonstration has run, and the Level 2
+  proposal has been presented.
 
 ## 4. After step 8 — handover
 

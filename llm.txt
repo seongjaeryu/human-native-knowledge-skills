@@ -33,6 +33,8 @@ Root:
 - README.md, README.ko.md, LICENSE, CHANGELOG.md
 - llm.txt — this file; hand-maintained by design (skill/03 §5.4)
 - orchestrator.md — the 8-step installation state machine
+- CLAUDE.md — for agents working ON this repository (contribution gate);
+  NOT part of the skill a consumer reads or installs
 
 core/ — the constitution:
 

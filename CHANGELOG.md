@@ -18,6 +18,7 @@ Before every release tag:
 1. Run the core-audit (`core/audit.md`) against every rule, spec, and script in this repository — record the result here.
 2. Re-run the installation end-to-end and regenerate `examples/` so the demo never drifts from the spec.
 3. Record spec changes as `minor`/`major` per SemVer; installed projects track the skill version they were installed from in their `project-profile.md`.
+4. Write release notes as a record, not a list: for each substantive change, state the observed problem, the structural fix, the quantified evidence (test/audit/verification output), and any mistakes reversed — failures included. A release note that claims more than was measured fails the honesty items of the audit.
 
 ## [Unreleased]
 
