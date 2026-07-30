@@ -2,7 +2,7 @@
 id: skill-08-conversation-archive
 type: skill
 status: active
-version: 2
+version: 3
 related: [core-philosophy, core-audit, skill-01-principles, skill-02-context-architecture, skill-03-okf, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-09-visual-assets, skill-10-environment-integration]
 summary: "The session archive: three artifacts (raw, card, index), the frozen identifier and card interfaces, the normalized raw format with mandatory redaction, upload behavior, and the three-layer consumption model."
 ---
@@ -161,7 +161,7 @@ The card body carries exactly these five sections, in this order:
 | Section | Content |
 | --- | --- |
 | `## Goal` | What this session set out to do, and under which mode |
-| `## Key decisions` | Each decision with its reason — including dictionary rows added ([05-dictionary-and-naming.md §4](05-dictionary-and-naming.md)) and interview outcomes |
+| `## Key decisions` | Each decision with its reason — including dictionary rows added ([05-dictionary-and-naming.md §4](05-dictionary-and-naming.md)) and interview outcomes. **When alternatives existed, each entry also records the alternatives considered and rejected, with why they lost** — a later reader (or agent) must never re-propose what was already declined. Not a separate section: a decision without alternatives states none, and an empty ceremony section would be padding |
 | `## Deltas` | One entry per specification change: reason, affected NODE-IDs, before/after in Mermaid edge syntax — this section absorbs the change ledger, per [06-lifecycle-and-versioning.md §4](06-lifecycle-and-versioning.md#4-the-change-ledger-is-absorbed-into-session-cards) |
 | `## Affected files` | Every file created, changed, or deleted, as a list of paths |
 | `## Follow-ups` | Open items handed to the next session (including manual-upload notes from §9) |
@@ -179,8 +179,9 @@ The criterion itself is constitutional —
 [H3](../core/audit.md#h--honesty-of-the-record) checks it. What this document
 adds is the operational contract: the check runs **before `ended` is filled**
 (a card cannot leave draft state while incomplete), the concrete units checked
-are the §4.5 sections (decisions with reasons, before/after deltas, affected
-files), and in the default flow the nth-degree consumer genuinely *cannot*
+are the §4.5 sections (decisions with reasons **and their rejected
+alternatives where any existed**, before/after deltas, affected files), and in
+the default flow the nth-degree consumer genuinely *cannot*
 access the raw (git-ignored, possibly never uploaded) — so failing this
 criterion means the archive fails entirely. Symmetric with the `alt` rule of
 [09-visual-assets.md](09-visual-assets.md).
@@ -283,6 +284,7 @@ All commands are subcommands of the single-entry script `node scripts/hnk.mjs` (
 | `node scripts/hnk.mjs archive upload [--provider r2] [--only <id>] [--dry-run]` | upload eligible raws (§9) |
 | `node scripts/hnk.mjs report [--from <date>] [--to <date>] [--topic <t>] [--domain <d>]` | card digest to standard output (§10) |
 | `node scripts/hnk.mjs verify` | global verification: archive-scope checks (§12) + visuals checks ([09-visual-assets.md](09-visual-assets.md)) + structure, grammar, pointer, staleness checks ([02](02-context-architecture.md), [03](03-okf.md), [06](06-lifecycle-and-versioning.md)) |
+| `node scripts/hnk.mjs status` | the ten-second handover view (§10): the newest completed card's summary, Key decisions, and Follow-ups, plus draft cards awaiting the recovery sweep |
 | `node scripts/hnk.mjs llm build` | regenerate the target's `llm.txt` ([03-okf.md §5](03-okf.md#5-llmtxt)) |
 
 `--format` values, **frozen for v1**:
@@ -363,6 +365,11 @@ This document owns the operational rules:
 | On-demand query | the human asks ("what happened with X?", "summarize last week") | search `_archive/index.md` → open matching cards → descend to a raw **only if** the cards cannot answer (a standing orchestrator rule) |
 | Report | the human wants a digest — the manager-check use case | `node scripts/hnk.mjs report [--from --to] [--topic] [--domain]` prints a markdown digest of matching cards (goal, key decisions, delta summaries) to standard output — the delivery step of [core §7](../core/philosophy.md#7-the-ai-native-storage-process) made executable |
 
+`node scripts/hnk.mjs status` is the zero-argument entry point of the Report
+layer — the **ten-second human handover**: a returning human (or their
+successor) sees the newest completed card's decisions and open ends in one
+terminal command, before any agent is even started.
+
 Audit item [N3](../core/audit.md#n--nth-degree-devices-transfer-time-understanding)
 checks that this path reconstructs past decisions from cards alone (possible
 exactly because of §4.6).
@@ -412,12 +419,27 @@ Checks this document contributes to `archive verify` and the global `verify`:
 | Card body sections (Goal / Key decisions / Deltas / Affected files / Follow-ups) and the self-sufficiency acceptance criterion | §4.5–4.6 |
 | Normalized raw format `hnk-raw v1`: header, speaker turns, optional timestamps, tool-call summaries | §6 |
 | Mandatory redaction: mask at write time, scan on capture and upload | §7 |
-| Command shapes: `archive new` / `index` / `verify` / `capture` (v1 formats: `claude-code-jsonl`, `markdown`, `plaintext`) / `upload`; `report` | §8 |
+| Command shapes: `archive new` / `index` / `verify` / `capture` (v1 formats: `claude-code-jsonl`, `markdown`, `plaintext`) / `upload`; `report`; `status` (added in version 3) | §8 |
 | Upload behavior: environment variables, secret-scan gate, 100 MiB single-PUT cap, two-retry backoff, no partial state, key-line substitution; multipart is v2 | §9 |
 | Index frontmatter, required columns, and row anchors | §11 |
 
 ## Version History
 
+- **version 3** — 2026-07-30. Two additions from the same community feedback
+  thread's analysis-request round. (1) **Rejected alternatives became a
+  content rule of Key decisions** (§4.5, §4.6). Why: "why NOT" is what stops
+  a later human or agent from re-proposing a declined approach — a direct
+  nth-degree device the section rule previously left implicit. How: a
+  normative rule inside the existing section rather than a new mandatory
+  section, because a sixth frozen section would force empty ceremony onto
+  decisions that had no alternatives — padding is itself knowledge debt.
+  (2) **`status` command added** (§8, §10). Why: the human handover path
+  ("person B returns, ten seconds to context") previously required composing
+  `report` filters or starting an agent; the delivery step of core §7 needs
+  a zero-thought human entry point. How: a read-only view over existing
+  cards — newest completed card's decisions and Follow-ups plus drafts
+  awaiting recovery; no new artifact (a `LATEST.md` derivative was declined:
+  it would duplicate the newest card and split the single source of truth).
 - **version 2** — 2026-07-30. Added the uncarded-work verification check
   (§12) and its recovery-sweep counterpart (orchestrator R3). **Why:**
   community feedback proposed an automated extraction architecture

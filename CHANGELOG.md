@@ -65,6 +65,27 @@ forbidden by audit F2), a Python sample script (Node-builtins-only rule), and
 auto-populated weights (declined above). Evidence: self-test 30/30 including
 a new git-fixture test for the check.
 
+**Handover strengthening, from the feedback thread's analysis-request round
+(four proposals reviewed against the core).** Accepted, reshaped
+(`skill/08` version 2 → 3): rejected alternatives became a normative content
+rule of Key decisions — "why NOT" stops a later reader from re-proposing a
+declined approach — as a rule inside the existing section, not a sixth
+mandatory section (empty ceremony sections are padding, and padding is debt);
+and a `status` command was added — the ten-second human handover view
+(newest card's decisions and open ends plus drafts awaiting recovery),
+read-only over existing artifacts (a `LATEST.md` derivative was declined: it
+would duplicate the newest card and split the single source of truth).
+Declined with reasons: a shipped one-line harness-anchor template
+(`skill/10` already freezes the pointer block's four required *elements*
+while deliberately not freezing wording — a fixed shipped template is
+precisely the rot-prone artifact decision 15 removes, and EC-1 already
+verifies the anchor); and a model-change self-check questionnaire (a
+self-graded comprehension quiz is rationalization-prone ceremony — the
+standing rules are re-read every session by R1 regardless of model, and
+misunderstanding surfaces at the first propose-then-confirm gate; the card's
+`meta.agent` field already records model changes). Evidence: self-test
+31/31 including a new `status` test.
+
 `examples/` regeneration for the template change follows at the v1.1.0
 release per the release rule.
 

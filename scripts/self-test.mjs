@@ -733,3 +733,42 @@ test('archive verify: uncarded-work warning from git commits', (t) => {
   assert.equal(r2.code, 0, r2.out);
   assert.ok(r2.out.includes('uncarded work: 1 commit(s)'), r2.out);
 });
+
+test('status: ten-second handover view', (t) => {
+  const root = makeFixture();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const id = 'session-20200101-120000-old-work';
+  fs.mkdirSync(path.join(root, '.context/_archive'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.context/_archive', `${id}.md`), [
+    '---', `id: ${id}`, 'type: session',
+    'started: 2020-01-01T12:00:00Z', 'ended: 2020-01-01T13:00:00Z',
+    'meta: {author: t, agent: t@t}', 'mode: confirm-spec-changes-only',
+    'visibility: private', 'status: raw-lost', 'raw_fidelity: reconstructed',
+    `raw_local: .context/_archive/sessions/${id}.full.md`,
+    'raw_remote: null', 'raw_sha256: null',
+    'summary: "Old carded work."', '---', '',
+    '## Goal', '', 'g', '',
+    '## Key decisions', '', '- decided the thing because reasons', '',
+    '## Deltas', '', 'd', '',
+    '## Affected files', '', 'a', '',
+    '## Follow-ups', '', '- open end one', '',
+  ].join('\n'));
+  const draftId = 'session-20200102-120000-in-flight';
+  fs.writeFileSync(path.join(root, '.context/_archive', `${draftId}.md`), [
+    '---', `id: ${draftId}`, 'type: session',
+    'started: 2020-01-02T12:00:00Z', 'ended: null',
+    'meta: {author: t, agent: t@t}', 'mode: confirm-spec-changes-only',
+    'visibility: private', 'status: local-only', 'raw_fidelity: reconstructed',
+    `raw_local: .context/_archive/sessions/${draftId}.full.md`,
+    'raw_remote: null', 'raw_sha256: null',
+    'summary: "In flight."', '---', '',
+    '## Goal', '', '', '## Key decisions', '', '', '## Deltas', '', '',
+    '## Affected files', '', '', '## Follow-ups', '', '',
+  ].join('\n'));
+  const r = runCli(root, ['status']);
+  assert.equal(r.code, 0, r.out);
+  assert.ok(r.out.includes(`Newest completed session: ${id}`), r.out);
+  assert.ok(r.out.includes('decided the thing because reasons'), r.out);
+  assert.ok(r.out.includes('open end one'), r.out);
+  assert.ok(r.out.includes(`1 draft card(s) (ended: null): ${draftId}`), r.out);
+});
