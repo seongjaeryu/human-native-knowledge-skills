@@ -2,7 +2,7 @@
 
 > A skill that teaches AI agents to build knowledge systems humans can actually understand.
 
-**v1.0.0** — install verified end-to-end over the raw GitHub URL: 24 files fetched, zero refetches, final `verify` green. [한국어 README](README.ko.md)
+Install verified end-to-end over the raw GitHub URL — 24 files fetched, zero refetches, final `verify` green ([release history](CHANGELOG.md)). [한국어 README](README.ko.md)
 
 ## Quickstart
 
@@ -20,7 +20,7 @@ Works with any agent that can fetch URLs and write files — verified end-to-end
 
 ## Your first ten minutes
 
-The installation itself becomes your first session card — the install session is archived before the agent finishes. One minute after install, ask your agent *"why is the archive set up this way?"* — it answers from the card, not from memory. Three weeks later, a different person's agent answers the same question the same way.
+The installation itself becomes your first session card — the install session is archived before the agent finishes. One minute after install, ask your agent *"why is the archive set up this way?"* — it answers from the card, not from memory. Three weeks later, a different person's agent answers the same question the same way. And when you — or your successor — return with no agent running, `node scripts/hnk.mjs status` prints the newest decisions and open ends in one terminal command.
 
 ## How it works
 
@@ -29,7 +29,7 @@ You know this moment: three weeks after a feature ships, someone asks *"why did 
 `hnk` restores how people solved this before AI: documents flowed between collaborators, and outcomes were distilled into **result documents** anyone could pick up later. Installed into your project, it gives you:
 
 - **Two interviews, both under a minute** — a setup interview at install, a one-line working-mode confirmation before each piece of work. The way of working is agreed and recorded, never assumed.
-- **A session archive that answers questions** — every "one human + one AI" session leaves a committed result card (decisions, reasons, deltas, affected files). Raw transcripts stay local and git-ignored, cryptographically linked to their cards. Ask *"what happened with X?"* or run `node scripts/hnk.mjs report` for a digest.
+- **A session archive that answers questions** — every "one human + one AI" session leaves a committed result card (decisions, reasons, deltas, affected files). Raw transcripts stay local and git-ignored, cryptographically linked to their cards. Ask *"what happened with X?"*, run `node scripts/hnk.mjs status` for the ten-second handover (no agent needed), or `report` for a full digest.
 - **Specifications that lead with diagrams** — node graphs and flowcharts before prose, stable NODE-IDs mapped to code (or to document sections in non-code projects).
 - **Honest records by construction** — reconstructed transcripts are never labeled as captured, every binary asset carries a required text description, and secrets are redacted at write time and scanned before upload.
 
