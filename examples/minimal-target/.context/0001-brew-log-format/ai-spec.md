@@ -64,7 +64,7 @@ report; tightening this is an open follow-up in the deciding session's card.
 
 No pivots yet — version 1 is the live content. Each future pivot appends an
 entry in
-[the frozen shape](https://github.com/seongjaeryu/human-native-knowledge-skills/blob/f8f3a88/skill/06-lifecycle-and-versioning.md#23-version-history-section):
+[the frozen shape](https://github.com/seongjaeryu/human-native-knowledge-skills/blob/03ccacf/skill/06-lifecycle-and-versioning.md#23-version-history-section):
 `### vN → vN+1 — <date>` with **reason**, **decided-by** (session card link),
 **before**/**after** (NODE-ID edge syntax), and **frozen-as** (the outgoing
 version's commit hash).

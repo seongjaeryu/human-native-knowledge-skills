@@ -14,6 +14,6 @@ never silently contradict — this document. Rows are added and changed through
 propose-then-confirm, and every change is recorded in the deciding session's
 card.
 
-| Id | Invariant | Reason | Decided by |
-| --- | --- | --- | --- |
-| <a id="inv-brew-001"></a>INV-BREW-001 | The [brew-log](dictionary.md#brew-log) is append-only: no session may rewrite, reorder, or delete existing lines. | Past brews are the project's only history; a rewritten log cannot be verified by any later reader. | [session-20260728-202806-brew-log-format-specification](../_archive/session-20260728-202806-brew-log-format-specification.md) |
+| Id | Invariant | Level | Reason | Decided by |
+| --- | --- | --- | --- | --- |
+| <a id="inv-brew-001"></a>INV-BREW-001 | The [brew-log](dictionary.md#brew-log) is append-only: no session may rewrite, reorder, or delete existing lines. | strict-negative | Past brews are the project's only history; a rewritten log cannot be verified by any later reader. | [session-20260730-061851-brew-log-format-specification](../_archive/session-20260730-061851-brew-log-format-specification.md) |

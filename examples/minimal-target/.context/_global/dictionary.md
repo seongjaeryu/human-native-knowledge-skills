@@ -22,7 +22,7 @@ propose-then-confirm and are recorded in the deciding session's card.
 | <a id="context"></a>context | — | `ctx`, `cntxt` | Application state, and the material a session provides to the AI. |
 | <a id="authentication"></a>authentication | — | `auth`, `authn` | The procedure that verifies an identity. If the team's public API uses `auth`, register it as an alias instead — the interview decides. |
 | <a id="isLoading"></a>isLoading | — | `isPending`, `waiting`, `loadingState` | Boolean flag: an asynchronous operation is in progress. Seeded only for code and mixed project types. |
-| <a id="NODE-ID"></a>NODE-ID | — | — | The unique identifier of a specification diagram node ([04-diagram-first.md](https://github.com/seongjaeryu/human-native-knowledge-skills/blob/f8f3a88/skill/04-diagram-first.md)). Seeded for all project types. |
+| <a id="NODE-ID"></a>NODE-ID | — | — | The unique identifier of a specification diagram node ([04-diagram-first.md](https://github.com/seongjaeryu/human-native-knowledge-skills/blob/03ccacf/skill/04-diagram-first.md)). Seeded for all project types. |
 | <a id="spec-node"></a>spec-node | — | — | The `@spec-node` code-comment marker mapping code to a NODE-ID. Seeded only for code and mixed project types. |
 | <a id="spec-doc"></a>spec-doc | — | — | The `@spec-doc` code-comment marker pointing at the owning specification document. Seeded only for code and mixed project types. |
 | <a id="human-native-knowledge-skills"></a>human-native-knowledge-skills | `hnk` | — | The skill system operating this project's knowledge base. Alias registered because it is unambiguous, heavily used, and appears in file names (`scripts/hnk.mjs`) and command namespaces. |

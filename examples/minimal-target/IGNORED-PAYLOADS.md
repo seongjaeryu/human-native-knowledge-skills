@@ -11,9 +11,9 @@ the binary is described by its mandatory `alt` text in
 
 | Local path (in the target) | Bytes | sha256 (first 12) | Represented by |
 | --- | --- | --- | --- |
-| .context/_archive/sessions/session-20260728-202134-install-hnk-coffee-tracker.full.md | 2951 | 66cc0c75e371 | card [session-20260728-202134-install-hnk-coffee-tracker](.context/_archive/session-20260728-202134-install-hnk-coffee-tracker.md) (`raw_sha256` holds the full digest) |
-| .context/_archive/sessions/session-20260728-202806-brew-log-format-specification.full.md | 2214 | d87301efb3a5 | card [session-20260728-202806-brew-log-format-specification](.context/_archive/session-20260728-202806-brew-log-format-specification.md) (`raw_sha256` holds the full digest) |
-| .context/_media/files/0001-brew-log-format/brew-log-sample.png | 70 | 497790947d46 | media index entry `media-20260728-202909-brew-log-sample` (its `sha256` field holds the full digest; its `alt` text states honestly that it is a single-pixel demo payload) |
+| .context/_archive/sessions/session-20260730-061612-install-hnk-coffee-tracker.full.md | 2898 | 9f10d326aba0 | card [session-20260730-061612-install-hnk-coffee-tracker](.context/_archive/session-20260730-061612-install-hnk-coffee-tracker.md) (`raw_sha256` holds the full digest) |
+| .context/_archive/sessions/session-20260730-061851-brew-log-format-specification.full.md | 2247 | 3482d24a8360 | card [session-20260730-061851-brew-log-format-specification](.context/_archive/session-20260730-061851-brew-log-format-specification.md) (`raw_sha256` holds the full digest) |
+| .context/_media/files/0001-brew-log-format/brew-log-sample.png | 70 | cb5079190045 | media index entry `media-20260730-061939-brew-log-sample` (its `sha256` field holds the full digest; its `alt` text states honestly that it is a single-pixel demo payload) |
 
 Both raws are `raw_fidelity: reconstructed` and `visibility: private`
 (`storage: none` was chosen at install, with the frozen disclosure

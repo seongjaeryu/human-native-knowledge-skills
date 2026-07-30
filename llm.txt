@@ -1,6 +1,7 @@
 # human-native-knowledge-skills (hnk) — AI entry point
 
-> STATUS: v1.0.0 release candidate — all build milestones landed.
+> STATUS: v1.1.0 — community-feedback round absorbed (rule collisions,
+> uncarded-work detection, status command); release history in CHANGELOG.md.
 > This file is the single entry point for AI agents consuming this repository.
 
 ## What this repository is

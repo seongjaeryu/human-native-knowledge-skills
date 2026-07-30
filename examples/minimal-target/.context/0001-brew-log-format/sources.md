@@ -22,7 +22,7 @@ Observed line produced by the pre-specification CLI (the de-facto format the
 specification codifies):
 
 ```text
-2026-07-28T20:22:29.199Z test 18 36 28
+2026-07-30T06:18:51.949Z test 18 36 28
 ```
 
 The project [README](../../README.md) documents the two entry points and the
@@ -33,7 +33,7 @@ specification preserves.
 
 | Reference | Locator | Retrieved | Notes |
 | --- | --- | --- | --- |
-| coffee-tracker README | ../../README.md | 2026-07-28 | Usage examples the format must keep working. |
+| coffee-tracker README | ../../README.md | 2026-07-30 | Usage examples the format must keep working. |
 
 ## Binary material
 
@@ -42,6 +42,6 @@ Binary files are never stored in the topic folder: register each one with
 anchor into [the media index](../_media/index.md), never by raw path.
 
 Registered for this topic:
-[media-20260728-202909-brew-log-sample](../_media/index.md#media-20260728-202909-brew-log-sample)
+[media-20260730-061939-brew-log-sample](../_media/index.md#media-20260730-061939-brew-log-sample)
 — demonstration payload exercising the binary registration path (see its
 `alt` text for what it is and is not).

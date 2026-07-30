@@ -11,7 +11,7 @@ mode: confirm-spec-changes-only
 depth: full-topic
 visuals: node-graph-and-flowchart
 archive: card-per-goal
-confirmed: 2026-07-28
+confirmed: 2026-07-30
 summary: "Level 2 interview record: Define the brew-log line format as a specification and map the CLI to it"
 ---
 

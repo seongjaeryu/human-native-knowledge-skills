@@ -1,7 +1,7 @@
 # examples/ — instance demo, not spec
 
 `examples/minimal-target/` is the committable output of a **real install
-run** of this skill, executed end-to-end on 2026-07-28 (UTC) against a tiny
+run** of this skill, executed end-to-end on 2026-07-30 (UTC) against a tiny
 fresh Node.js CLI project ("coffee-tracker"): orchestrator steps 1–8, then
 one full-topic Level 2 work session (topic `0001-brew-log-format`), ending
 with `node scripts/hnk.mjs verify` fully green (0 failures, 0 warnings).
@@ -35,11 +35,13 @@ the demo as a whole.
 
 ## What generated it
 
-- Skill version: pre-v1, commit `f8f3a88` of this repository (the copied
-  `scripts/hnk.mjs` was afterwards synchronized with the repository copy,
-  which gained a fix to the visuals-verify path matching found by this run)
-  (`hnk_version: "0.0.0-unreleased"` in the instance's project profile —
-  no release tag existed yet).
+- Skill version: commit `03ccacf` of this repository — the post-v1.0.0
+  working tree regenerated for the v1.1.0 release, recorded honestly in the
+  instance's project profile as `hnk_version: "1.1.0-unreleased"` (the
+  v1.1.0 tag did not exist at generation time). This regeneration reflects
+  the v1.1.0 template and specification changes: the invariants `Level`
+  column (skill/02 v2), the target orchestrator rules R21–R22 and the
+  extended R3 uncarded-work sweep, and the `status` command of skill/08 v3.
 - Git-ignored payloads (raw transcripts, one binary) are not part of the
   committable output; they are represented by
   [minimal-target/IGNORED-PAYLOADS.md](minimal-target/IGNORED-PAYLOADS.md)

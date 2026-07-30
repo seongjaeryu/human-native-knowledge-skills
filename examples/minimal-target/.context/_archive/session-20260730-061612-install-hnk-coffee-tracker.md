@@ -1,17 +1,17 @@
 ---
-id: session-20260728-202134-install-hnk-coffee-tracker
+id: session-20260730-061612-install-hnk-coffee-tracker
 type: session
-started: 2026-07-28T20:21:34Z
-ended: 2026-07-28T20:26:18Z
+started: 2026-07-30T06:16:12Z
+ended: 2026-07-30T06:18:25Z
 meta: {author: seongjaeryu, agent: claude-code@claude-fable-5}
 mode: confirm-each-change
 visibility: private
 status: local-only
 raw_fidelity: reconstructed
-raw_local: .context/_archive/sessions/session-20260728-202134-install-hnk-coffee-tracker.full.md
+raw_local: .context/_archive/sessions/session-20260730-061612-install-hnk-coffee-tracker.full.md
 raw_remote: null
-raw_sha256: 66cc0c75e3715a5c970e723874e6629b140b7ed0242c3792dbcc3732a1c4450d
-summary: "Installed hnk (commit f8f3a88) into coffee-tracker: fresh install, wiki/ Living layer, Claude Code pointer block with declined trigger, verify green."
+raw_sha256: 9f10d326aba0386d23ac923c79345a74d2423b1cd72c75fe641b275094eecf52
+summary: "Installed hnk (commit 03ccacf) into coffee-tracker: fresh install, wiki/ Living layer, Claude Code pointer block with declined trigger, verify green."
 ---
 
 ## Goal
@@ -19,7 +19,9 @@ summary: "Installed hnk (commit f8f3a88) into coffee-tracker: fresh install, wik
 Install human-native-knowledge-skills into the fresh coffee-tracker project
 (install mode, steps 1–8 of the root orchestrator). Installation ran under
 `confirm-each-change` — every decision was propose-then-confirm, as the state
-machine requires.
+machine requires. The session's true beginning was 2026-07-30T06:13:15Z; this
+card's id and `started` record the `archive new` command time, per the root
+orchestrator's step 8 rule.
 
 ## Key decisions
 
@@ -33,11 +35,14 @@ machine requires.
   `domain_layer: false`; `design_system: false`** — one small CLI is
   single-domain; no UI surface, so `design-system.md` was skipped.
 - **L1-4 `viewer: none`** — the Living layer is read directly.
-- **L1-5 Living layer: create `wiki/`** — no existing `docs/` or equivalent,
-  so `wiki/index.md` was instantiated from `templates/living/`.
-- **L1-6 `storage: none`** — the frozen disclosure was stated before
-  confirmation ("Raw transcripts and binaries will exist only on this
-  machine; if it is lost, only the session cards remain") and acknowledged.
+- **L1-5 Living layer: create `wiki/`** — no existing `docs/` or equivalent
+  existed, so designating one was not an available alternative;
+  `wiki/index.md` was instantiated from `templates/living/`.
+- **L1-6 `storage: none`** — the `r2` alternative was declined: this
+  demonstration target needs no off-machine persistence and no credentials
+  exist for it. The frozen disclosure was stated before confirmation ("Raw
+  transcripts and binaries will exist only on this machine; if it is lost,
+  only the session cards remain") and acknowledged.
 - **L1-7 `languages: [en]`, audience "future maintainers"** — local-language
   dictionary column stays inactive.
 - **L1-8 dictionary seeded** — default rows confirmed unchanged; one project
@@ -45,15 +50,19 @@ machine requires.
   registered as the NODE-ID domain code (registration before first use, per
   the diagram-first naming rule).
 - **Global invariants seeded empty** — no invariant was confirmed at install;
-  padding rows are knowledge debt.
-- **Environment integration: Claude Code, trigger `declined`.** Current tool
+  padding rows are knowledge debt. The table carries the five-column schema
+  with the `Level` column (`strict-negative` | `hard`) of skill/02 §3.3.
+- **Environment integration: Claude Code, trigger `declined`.** The tool's
   documentation (https://code.claude.com/docs/en/memory) confirms `CLAUDE.md`
   is loaded every session and that hook automation exists; the human declined
-  wiring a capture hook for this target, so the rule-based floor covers
+  wiring a capture hook for this target — the rejected alternative was a
+  session-end hook invoking `archive capture`, declined to keep the demo
+  target free of tool-specific wiring — so the rule-based floor covers
   archiving and this raw is honestly `reconstructed`.
-- **`hnk_version: "0.0.0-unreleased"`** — the installed skill repository has
-  no release tag yet (pre-v1); `hnk_commit: f8f3a88` is the authoritative
-  upgrade baseline.
+- **`hnk_version: "1.1.0-unreleased"`** — the installed skill repository's
+  latest release tag is v1.0.0, but this install consumed the post-v1.0.0
+  working tree; recording "1.0.0" would overclaim. `hnk_commit: 03ccacf` is
+  the authoritative upgrade baseline.
 
 ## Deltas
 
@@ -64,13 +73,13 @@ topic is proposed in Follow-ups).
 
 - CLAUDE.md (created — pointer block inside `hnk:begin`/`hnk:end` markers)
 - .gitignore (managed hnk block appended)
-- .context/_global/orchestrator.md (created)
-- .context/_global/invariants.md (created, empty table)
+- .context/_global/orchestrator.md (created — standing rules R1–R22)
+- .context/_global/invariants.md (created, empty table with Level column)
 - .context/_global/dictionary.md (created, seeded)
 - .context/_global/project-profile.md (created)
 - .context/_archive/index.md (created empty, then regenerated by `archive index`)
 - .context/_media/index.md (created empty)
-- .context/_archive/sessions/session-20260728-202134-install-hnk-coffee-tracker.full.md (this session's raw, git-ignored)
+- .context/_archive/sessions/session-20260730-061612-install-hnk-coffee-tracker.full.md (this session's raw, git-ignored)
 - wiki/index.md (created)
 - scripts/hnk.mjs (copied verbatim from the skill repository, sha256-identical)
 - llm.txt (generated by `llm build`)

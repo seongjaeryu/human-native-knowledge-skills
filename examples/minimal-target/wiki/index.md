@@ -32,5 +32,5 @@ graph TD
 
 ## History Annotation
 
-- 2026-07-28 — [0001-brew-log-format](../.context/0001-brew-log-format/ai-spec.md) v1
-  — decided in [session-20260728-202806-brew-log-format-specification](../.context/_archive/session-20260728-202806-brew-log-format-specification.md)
+- 2026-07-30 — [0001-brew-log-format](../.context/0001-brew-log-format/ai-spec.md) v1
+  — decided in [session-20260730-061851-brew-log-format-specification](../.context/_archive/session-20260730-061851-brew-log-format-specification.md)

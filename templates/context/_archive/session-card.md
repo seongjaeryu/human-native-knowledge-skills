@@ -64,7 +64,7 @@ summary: "{{ONE_LINE_SUMMARY}}"
 
 ## Key decisions
 
-<!-- ai-instruction: every decision with its reason — including dictionary rows added (skill/05 §4) and interview outcomes. -->
+<!-- ai-instruction: every decision with its reason — including dictionary rows added (skill/05 §4) and interview outcomes. When alternatives existed, record the alternatives considered and rejected with why they lost (skill/08 §4.5); a decision without alternatives states none. -->
 
 ## Deltas
 

@@ -37,23 +37,25 @@ The problem this solves is **knowledge debt**: the *principal* is every AI outpu
 
 ## What a session leaves behind
 
-This is a real card from the demo install (excerpt — full card in [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260728-202806-brew-log-format-specification.md)):
+This is a real card from the demo install (excerpt — full card in [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260730-061851-brew-log-format-specification.md)):
 
 ```markdown
 ---
-id: session-20260728-202806-brew-log-format-specification
+id: session-20260730-061851-brew-log-format-specification
 meta: {author: seongjaeryu, agent: claude-code@claude-fable-5}
 mode: confirm-spec-changes-only
 raw_fidelity: reconstructed
 summary: "Topic 0001-brew-log-format created: ai-spec v1 (NODE-BREW-01..03),
-  spec-node mapping into both CLI files, INV-BREW-001, wiki synced."
+  spec-node mapping into both CLI files, INV-BREW-001 (strict-negative),
+  first binary registered, wiki synced."
 ---
 ## Key decisions
-- **Line format codified as observed**: `ISO-timestamp bean dose yield seconds` —
-  codifying the de-facto format instead of inventing a new one keeps every
-  existing log line valid.
-- **INV-BREW-001 added** (append-only brew-log): the log is the project's only
-  history, so rewriting it would destroy verifiability.
+- **Line format codified as observed**: `ISO-timestamp bean dose yield seconds`.
+  Rejected alternative: inventing a new, richer line format — it lost because
+  every existing log line already speaks the de-facto format; a new format
+  would invalidate the only history the project has, for no added understanding.
+- **INV-BREW-001 added** (append-only brew-log, level strict-negative): the log
+  is the project's only history, so rewriting it would destroy verifiability.
 
 ## Deltas
 - **Initial topology established (v1)**
@@ -72,8 +74,8 @@ This repository applies its own philosophy to itself — every claim below is re
 
 - **Real-URL install verified** before tagging v1.0.0: a fresh agent session given only the GitHub URL fetched 24 files (343,410 bytes, zero refetches), confirmed the script and templates byte-identical over the URL path (SHA-256), and completed the install with `verify` at 0 failures / 0 warnings.
 - **Three end-to-end installs green**: fresh code project, brownfield (existing `CLAUDE.md` + `docs/`, nothing moved), and a non-code knowledge project.
-- **`scripts/hnk.mjs` is one dependency-free file** (Node builtins only) with a 29-test suite, green on Node 18/20/22 in CI.
-- **Pre-release self-audit passed** ([`core/audit.md`](core/audit.md)): zero derivation/honesty failures; 538 semantic pointers mechanically checked, all live links resolve.
+- **`scripts/hnk.mjs` is one dependency-free file** (Node builtins only) with a 31-test suite, green on Node 18/20/22 in CI.
+- **A pre-release self-audit gates every tag** ([`core/audit.md`](core/audit.md)): zero derivation/honesty failures, with hundreds of semantic pointers mechanically checked per release — each audit's numbers are recorded in [CHANGELOG.md](CHANGELOG.md).
 - **[`examples/minimal-target`](examples/README.md) is the output of a real install run** — including the disclosure of what was simulated (interview answers). We publish what the demo is, not what it pretends to be.
 
 Findings from every verification run — including our own defects — are in [CHANGELOG.md](CHANGELOG.md).

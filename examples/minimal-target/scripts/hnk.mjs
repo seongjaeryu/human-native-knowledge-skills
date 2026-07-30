@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import process from 'node:process';
+import { spawnSync } from 'node:child_process';
 
 // ---------------------------------------------------------------------------
 // Node version gate
@@ -941,6 +942,30 @@ function archiveVerify(root, rep) {
     }
   }
 
+  // uncarded work (advisory, 08 §12): commits newer than the newest card
+  // that never touched the archive — work done outside any carded session.
+  const newestCardMs = cards.reduce((max, c) => {
+    const t = Date.parse(String(cardValue(c, 'ended') ?? cardValue(c, 'started') ?? ''));
+    return Number.isFinite(t) && t > max ? t : max;
+  }, 0);
+  if (newestCardMs > 0 && exists(path.join(root, '.git'))) {
+    const since = new Date(newestCardMs).toISOString();
+    /** @param {string[]} args @returns {string[]|null} */
+    const gitLines = (args) => {
+      const r = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
+      return r.status === 0 && typeof r.stdout === 'string' ? r.stdout.split('\n').filter(Boolean) : null;
+    };
+    const all = gitLines(['log', '--pretty=%H', `--since=${since}`]);
+    const carded = gitLines(['log', '--pretty=%H', `--since=${since}`, '--', '.context/_archive']);
+    if (all && carded) {
+      const cardedSet = new Set(carded);
+      const uncarded = all.filter((h) => !cardedSet.has(h)).length;
+      if (uncarded > 0) {
+        rep.warn(`uncarded work: ${uncarded} commit(s) newer than the newest session card touch no archive file — propose a retro-card, honestly labeled reconstructed (08 §5; orchestrator R3)`);
+      }
+    }
+  }
+
   // local-only accumulation (advisory)
   if (localOnly.length > 20) {
     rep.warn(`local-only accumulation: ${localOnly.length} local-only raws (>20) — a machine loss would orphan them; consider upload or backup (08 §12)`);
@@ -1843,6 +1868,38 @@ function buildReport(root, opts) {
   return out.join('\n');
 }
 
+/**
+ * `status` — the ten-second handover view (08 §10): the newest completed
+ * card's decisions and open ends, plus anything needing recovery.
+ * @param {string} root
+ * @returns {string}
+ */
+function buildStatus(root) {
+  const { cards } = loadCards(root);
+  const sorted = sortCardsNewestFirst(cards);
+  const completed = sorted.filter((c) => cardValue(c, 'ended') !== null);
+  const drafts = sorted.filter((c) => cardValue(c, 'ended') === null);
+  const out = ['# Status — the ten-second handover', ''];
+  if (!completed.length) {
+    out.push('No completed session cards yet.');
+  } else {
+    const c = completed[0];
+    const date = String(cardValue(c, 'ended') ?? cardValue(c, 'started') ?? '').slice(0, 10);
+    out.push(`Newest completed session: ${c.id} (${date}, mode ${String(cardValue(c, 'mode') ?? '—')})`);
+    out.push('');
+    out.push(`> ${String(cardValue(c, 'summary') ?? '')}`);
+    const decisions = sectionContent(c.body, '## Key decisions');
+    const follow = sectionContent(c.body, '## Follow-ups');
+    if (decisions) out.push('', '## Key decisions', '', decisions);
+    if (follow) out.push('', '## Follow-ups (open ends)', '', follow);
+  }
+  if (drafts.length) {
+    out.push('', `warning: ${drafts.length} draft card(s) (ended: null): ${drafts.map((c) => c.id).join(', ')} — recovery sweep applies (08 §5).`);
+  }
+  out.push('', 'Full digest: `node scripts/hnk.mjs report` — integrity: `node scripts/hnk.mjs verify`');
+  return out.join('\n');
+}
+
 // ---------------------------------------------------------------------------
 // Global verify (02 §7, 03 §6, 06 §6, 07 §8, 08 §12, 09 §7)
 // ---------------------------------------------------------------------------
@@ -2017,6 +2074,7 @@ Commands:
   visuals upload [--provider r2] [--only <id>] [--dry-run]
   llm build
   report [--from <YYYY-MM-DD>] [--to <YYYY-MM-DD>] [--topic <t>] [--domain <d>]
+  status                    ten-second handover: newest card decisions + open ends
   verify
 
 --root defaults to the nearest ancestor directory containing .context/.
@@ -2168,6 +2226,11 @@ async function main(argv, log = console.log) {
       log(digest);
       return rep.flush(log);
     }
+    if (ns === 'status') {
+      const rep = new RunReport('status');
+      log(buildStatus(root));
+      return rep.flush(log);
+    }
     if (ns === 'verify') {
       const rep = new RunReport('verify');
       globalVerify(root, rep);
@@ -2206,7 +2269,7 @@ export {
   // signing + upload
   sha256Hex, sigv4Sign, r2ConfigFromEnv, r2Put, UPLOAD_SIZE_CAP,
   // archive
-  loadCards, archiveNew, archiveIndex, renderArchiveIndex, archiveVerify,
+  loadCards, archiveNew, archiveIndex, renderArchiveIndex, archiveVerify, buildStatus,
   archiveCapture, archiveUpload, parseClaudeCodeJsonl, renderRaw, toolCallSummary,
   // visuals
   loadMediaIndex, renderMediaIndex, visualsAdd, visualsIndex, visualsVerify,
