@@ -68,8 +68,17 @@ Evidence: `scripts/self-test.mjs` gained the
 pinning the full contract (valid resolution, unknown id, dead link, missing
 summary, code-fence non-trigger, Living-layer target, quoted `type` value,
 CRLF stub, view-to-view rejection, duplicate-id interaction, and the stub
-living inside the Living layer itself, both directions) — suite 31 → 43,
+living inside the Living layer itself, both directions) — suite 31 → 44,
 all green.
+
+Core-audit run over this branch's diff (Task 8, `main...HEAD`): D1–D3 and N2
+pass (every added rule states its serving degree; core cited by anchor,
+never restated; no rule contradicts another; pointers and the anchors cited
+in §11 and the coexistence guide all resolve); H-items pass (§11.1's
+symlink claims are dated and measured, the guide's superpowers claims cite
+version and line numbers). P-items (`examples/` regeneration, SemVer bump)
+are release-cut concerns per the Release rule above, deferred to the next
+tag.
 
 ## [1.1.0] — 2026-07-30
 

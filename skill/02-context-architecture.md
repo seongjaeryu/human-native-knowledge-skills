@@ -414,6 +414,10 @@ A view stub carries the common frontmatter of
 A stub's own `id` carries the `view-` prefix with a kebab-case slug (e.g.
 `view-legacy-plan`); like every id it must be unique across the project
 ([03-okf.md §6](03-okf.md#6-what-verification-enforces-from-this-document)).
+The prefix is a convention only — unlike the session and media id schemes
+([`08-conversation-archive.md`](08-conversation-archive.md) §3,
+[`09-visual-assets.md`](09-visual-assets.md) §3), `verify` does not
+regex-check it.
 
 Body contract, three parts in order:
 
@@ -440,12 +444,15 @@ apply.
 ### 11.4 Verification
 
 `node scripts/hnk.mjs verify` scans committed `.md` files outside
-`.context/` for `type: view` frontmatter and fails on: a `resolves_to` that
-names no committed document id; a `resolves_to` naming another view's id —
-the target must be the authoritative document (§11.2); a dead relative link
-in the stub body ([`03-okf.md` §4](03-okf.md#4-semantic-pointers)); a
-missing `summary`. A stub that cannot be resolved misleads exactly the
-consumer it exists to orient (N2).
+`.context/` for `type: view` frontmatter and fails on: a frontmatter subset
+violation on a view candidate ([`03-okf.md`
+§3](03-okf.md#3-the-machine-readable-subset-grammar)) — a missing `summary`
+is one instance; a missing `id`; a missing `resolves_to` field; a
+`resolves_to` naming a view's id (its own or another's) — the target must be
+the authoritative document (§11.2); a `resolves_to` that names no committed
+document id; a dead relative link in the stub body ([`03-okf.md`
+§4](03-okf.md#4-semantic-pointers)). A stub that cannot be resolved misleads
+exactly the consumer it exists to orient (N2).
 
 ## Version History
 
