@@ -34,17 +34,19 @@ project):
 Design docs and plans from any skill — including superpowers
 `writing-plans` and `brainstorming` — MUST be saved into the hnk
 structure: design content into the active topic's `ai-spec.md`,
-execution plans as the active topic's `plan.md` (skill/02 §4.1).
-NEVER create or write into `docs/superpowers/`. Where a legacy
-`docs/superpowers/` path already exists or an external consumer
-expects it, stand a compat-view stub there per skill/02 §11
+execution plans as the active topic's `plan.md` (skill/02 §4.1) —
+EXCEPT artifacts recorded as reversed in the topic's `sources.md`
+(skill/02 §11.3): those keep their authoritative file at the tool's
+own path, and the topic binds them with a pointer row. Do not
+create or write into `docs/superpowers/` otherwise; where a legacy
+path exists or an external consumer expects one, stand a
+compat-view stub there per skill/02 §11
 (template: templates/context/view-stub.md).
 ```
 
-The block encodes §3's *default* orientation. Under a reversed orientation
-for a given artifact, drop the NEVER sentence — the mapping sentences
-above it still hold — since superpowers writing into `docs/superpowers/`
-is then the sanctioned path, not the violation the sentence forbids.
+The block defers to recorded reversals, so reversing an artifact needs no
+CLAUDE.md edit — record the `sources.md` row per §3 and the block's
+exception covers it.
 
 ## 2. Artifact mapping
 
