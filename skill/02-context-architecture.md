@@ -27,7 +27,7 @@ below exists to serve one of the two degrees of understanding
 | Mandatory Living layer | nth degree | delivery step of [core §7](../core/philosophy.md#7-the-ai-native-storage-process) |
 | Hidden `.context/` with write/read paths | first degree | [core §8](../core/philosophy.md#8-storageconsumption-separation) |
 | Exactly two git-ignored directories | nth degree | honesty of the record, [core §9](../core/philosophy.md#9-honesty-of-the-record) |
-| Compat views — external tool paths bound by stubs (§11) | nth degree | mapping principle of §10; [core §8](../core/philosophy.md#8-storageconsumption-separation) |
+| Compat views and the optional topic `plan.md` — external tool paths bound by stubs (§4.1, §11) | nth degree | mapping principle of §10; [core §2](../core/philosophy.md#2-first-principle--the-two-stage-condition-of-accumulation) |
 
 ## 2. The installed layout
 
@@ -89,6 +89,7 @@ target/
 │           ├── sources.md           # collected originals and references
 │           ├── ai-spec.md           # the spec — diagrams first (04), Version History (06)
 │           ├── safety-rules.md      # OPTIONAL — topic-scoped temporary rules
+│           ├── plan.md              # OPTIONAL — execution plan for the current spec version (§4.1)
 │           └── visuals/             # committed text-format assets (*.svg, *.mmd)
 ├── wiki/                            # Living layer — or an existing docs/ designated instead
 └── scripts/
@@ -230,7 +231,7 @@ Appendix A.)
 | `sources.md` | collected requirements, references, release-note originals; pointer document for external material | this document + [`03-okf.md`](03-okf.md) |
 | `ai-spec.md` | the master plan/design document — diagrams first, Node IDs, Version History section | [`04-diagram-first.md`](04-diagram-first.md), [`06-lifecycle-and-versioning.md`](06-lifecycle-and-versioning.md) |
 | `safety-rules.md` (optional) | rules active only while this topic's work is underway | this document |
-| `plan.md` (optional) | execution plan for the current spec version; external plan-writing tools' artifacts land or bind here (§11) | this document + [`06-lifecycle-and-versioning.md`](06-lifecycle-and-versioning.md) |
+| `plan.md` (optional) | execution plan for the current spec version; external plan-writing tools' artifacts land or bind here (§11) | this document |
 | `visuals/` | text-format visual assets (`.svg`, `.mmd`); Mermaid inline in `ai-spec.md` is preferred | [`09-visual-assets.md`](09-visual-assets.md) |
 
 ### 4.2 Where the removed subfolders went
@@ -395,9 +396,9 @@ structure. One physical document, two entry points.
 Measured (2026-07-31, macOS/APFS): `rg` matches nothing behind a file or
 directory symlink unless invoked with `--follow`; `find` does not descend
 into a directory symlink; git stores symlinks as mode-120000 objects and,
-under `core.symlinks=false` (the Git for Windows default), checks them out
-as plain text files. A symlink is therefore invisible to the
-content-search half of retrieval and non-portable; a stub file is
+under `core.symlinks=false` — the documented Git for Windows default —
+checks them out as plain text files. A symlink is therefore invisible to
+the content-search half of retrieval and non-portable; a stub file is
 searchable, portable, and carries its own resolution metadata.
 
 ### 11.2 Stub format
@@ -415,8 +416,8 @@ Body contract, three parts in order:
 1. one line naming the authoritative location as a relative link — the
    fast path;
 2. one line for the stale case: resolve `resolves_to` via `llm.txt` or
-   the archive index — id anchors survive moves
-   ([`03-okf.md` §4.2](03-okf.md#42-prefer-id-anchored-links-for-assets));
+   the archive index — ids, not paths, survive moves
+   ([`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document));
 3. a `Keywords:` line copying the authoritative document's key terms —
    the stub's content-search surface.
 
@@ -428,6 +429,9 @@ at the external path, a pointer row in the topic's `sources.md` — when the
 external tool re-reads its own artifacts more often than hnk consumers do.
 Record the choice and its reason as a row in the topic's `sources.md`.
 Tool-specific recipes live in [`guides/coexistence/`](../guides/coexistence/).
+A stub standing inside a designated Living layer is an ordinary
+Living-layer document: `llm build` scans it and the sync rules of §6
+apply.
 
 ### 11.4 Verification
 
@@ -450,7 +454,7 @@ it exists to orient (N2).
   external tools keep creating. **How:** one physical document, two entry
   points — the authoritative file in the hnk structure, a searchable stub
   (`type: view`, id-first resolution per
-  [`03-okf.md` §4.2](03-okf.md#42-prefer-id-anchored-links-for-assets)) at
+  [`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document)) at
   the tool's path. OS symlinks were measured and declined: invisible to
   `rg`'s default content search, degraded to plain text by
   `core.symlinks=false` checkouts. Orientation is reversible per topic by
