@@ -857,4 +857,99 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     assert.equal(r.code, 0, r.out);
     fs.rmSync(wikiPath);
   });
+
+  await t.test('valid view resolving to a Living-layer doc id passes verify', () => {
+    const livingViewPath = path.join(stubDir, 'legacy-plan-living.md');
+    fs.writeFileSync(livingViewPath, okfDoc({
+      id: 'view-0002-legacy-plan-living',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'wiki-index', // makeFixture() seeds wiki/index.md with id: wiki-index
+      summary: 'Compat view: the authoritative page lives in the Living layer.',
+    }, [
+      'Authoritative: [target](../../../wiki/index.md)',
+      'Keywords: legacy plan compat view fixture living layer',
+    ].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    fs.rmSync(livingViewPath);
+  });
+
+  await t.test('quoted type: "view" stub with unresolvable resolves_to fails verify', () => {
+    const quotedViewPath = path.join(stubDir, 'quoted-type-view.md');
+    fs.writeFileSync(quotedViewPath, [
+      '---',
+      'id: view-0003-quoted-type',
+      'type: "view"',
+      'status: active',
+      'version: 1',
+      'related: []',
+      'resolves_to: no-such-id',
+      'summary: "Quoted type value compat view fixture."',
+      '---',
+      '',
+      'Keywords: quoted type compat view fixture',
+      '',
+    ].join('\n'));
+    const r = runCli(root, ['verify']);
+    assert.notEqual(r.code, 0);
+    assert.match(r.out, /resolves_to/);
+    fs.rmSync(quotedViewPath);
+  });
+
+  await t.test('CRLF-terminated stub fails loudly, not silently skipped', () => {
+    const crlfViewPath = path.join(stubDir, 'crlf-view.md');
+    fs.writeFileSync(crlfViewPath, [
+      '---',
+      'id: view-0004-crlf',
+      'type: view',
+      'status: active',
+      'version: 1',
+      'related: []',
+      'resolves_to: orchestrator',
+      'summary: "CRLF compat view fixture."',
+      '---',
+      '',
+      'Keywords: crlf compat view fixture',
+      '',
+    ].join('\r\n'));
+    const r = runCli(root, ['verify']);
+    assert.notEqual(r.code, 0);
+    assert.match(r.out, /frontmatter fence/);
+    fs.rmSync(crlfViewPath);
+  });
+
+  await t.test('view resolving to another view id fails verify', () => {
+    const viewAPath = path.join(stubDir, 'view-a.md');
+    const viewBPath = path.join(stubDir, 'view-b.md');
+    fs.writeFileSync(viewBPath, okfDoc({
+      id: 'view-0006-b',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'orchestrator',
+      summary: 'Compat view B: the authoritative plan lives in .context.',
+    }, [
+      'Authoritative: [target](../../../.context/_global/orchestrator.md)',
+    ].join('\n')));
+    fs.writeFileSync(viewAPath, okfDoc({
+      id: 'view-0005-a',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'view-0006-b',
+      summary: 'Compat view A: resolves to another view (invalid).',
+    }, [
+      'Authoritative: [target](./view-b.md)',
+    ].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.notEqual(r.code, 0);
+    assert.match(r.out, /names another view/);
+    fs.rmSync(viewAPath);
+    fs.rmSync(viewBPath);
+  });
 });
