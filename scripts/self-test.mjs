@@ -842,4 +842,19 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     assert.match(r.out, /summary/);
     fs.writeFileSync(stubPath, text); // restore
   });
+
+  await t.test('body-level type: view mention in a non-view doc does not trigger the scan', () => {
+    const wikiPath = path.join(root, 'wiki', 'how-views-work.md');
+    fs.writeFileSync(wikiPath, okfDoc({
+      id: 'wiki-how-views-work',
+      type: 'wiki',
+      status: 'active',
+      version: 1,
+      related: [],
+      summary: 'Explains compat views with an example.',
+    }, ['```markdown', 'type: view', '```'].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    fs.rmSync(wikiPath);
+  });
 });

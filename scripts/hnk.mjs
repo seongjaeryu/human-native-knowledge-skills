@@ -1973,6 +1973,7 @@ function structureVerify(root, rep) {
       rep.fail(`compat view ${rel}: frontmatter subset violation: ${/** @type {Error} */ (e).message} (03 §3)`);
       continue;
     }
+    if (!fm.entries.type || fm.entries.type.value !== 'view') continue; // body mention, not a view stub
     const vid = fm.entries.id ? String(fm.entries.id.value) : null;
     if (vid) {
       if (!idFiles.has(vid)) idFiles.set(vid, []);
