@@ -83,7 +83,7 @@ required is decided per type by the owning specification.
 | `profile` | target: `_global/project-profile.md` | [07-pre-interview.md](07-pre-interview.md) |
 | `archive-index` | target: `_archive/index.md` | [08-conversation-archive.md](08-conversation-archive.md) |
 | `media-index` | target: `_media/index.md` | [09-visual-assets.md](09-visual-assets.md) |
-| `view` | target: compat-view stubs at external tool paths | [`02-context-architecture.md`](02-context-architecture.md) §11 |
+| `view` | target: compat-view stubs at external tool paths | [02-context-architecture.md](02-context-architecture.md) §11 |
 
 ### 2.3 Per-type fields live with their owners
 
@@ -313,7 +313,7 @@ defined in [`core/audit.md`](../core/audit.md).
 
 - **version 2** — 2026-08-01. Added the `view` type to the §2.2 enum;
   its `resolves_to` field is owned by
-  [`02-context-architecture.md`](02-context-architecture.md) §11 per the
+  [02-context-architecture.md](02-context-architecture.md) §11 per the
   ownership rule of §2.3. **Why:** compat views need a `type` so the
   toolchain can find and verify stubs standing outside `.context/`.
   **How:** enum row only — the subset grammar (§3.1–3.2) and the common
