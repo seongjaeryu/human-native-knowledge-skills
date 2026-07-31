@@ -411,6 +411,10 @@ A view stub carries the common frontmatter of
 | --- | --- |
 | `resolves_to` | the **id** of the authoritative document — an id, not a path, per the machine-layer rule of [`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document); failed resolution is audit item [N2](../core/audit.md#n--nth-degree-devices-transfer-time-understanding) |
 
+A stub's own `id` carries the `view-` prefix with a kebab-case slug (e.g.
+`view-legacy-plan`); like every id it must be unique across the project
+([03-okf.md §6](03-okf.md#6-what-verification-enforces-from-this-document)).
+
 Body contract, three parts in order:
 
 1. one line naming the authoritative location as a relative link — the
