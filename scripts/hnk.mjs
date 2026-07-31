@@ -1901,7 +1901,7 @@ function buildStatus(root) {
 }
 
 // ---------------------------------------------------------------------------
-// Global verify (02 §7, 03 §6, 06 §6, 07 §8, 08 §12, 09 §7)
+// Global verify (02 §7, 02 §11, 03 §6, 06 §6, 07 §8, 08 §12, 09 §7)
 // ---------------------------------------------------------------------------
 
 /**
@@ -1958,6 +1958,44 @@ function structureVerify(root, rep) {
       if (!exists(resolved)) rep.fail(`dead semantic pointer in ${rel}: (${target}) does not resolve (03 §4)`);
     }
   }
+
+  // Compat views (02 §11): stubs outside .context/ resolve by id.
+  const viewSkip = new Set(['.git', 'node_modules', '.context']);
+  for (const rel of walkFiles(root, (d) => viewSkip.has(d.split('/').pop() ?? d))) {
+    if (!rel.endsWith('.md')) continue;
+    const abs = path.join(root, rel);
+    const text = readText(abs);
+    if (!text.startsWith('---\n') || !/^type: view$/m.test(text)) continue; // not a view stub
+    let fm;
+    try {
+      ({ fm } = parseDocument(text));
+    } catch (e) {
+      rep.fail(`compat view ${rel}: frontmatter subset violation: ${/** @type {Error} */ (e).message} (03 §3)`);
+      continue;
+    }
+    const vid = fm.entries.id ? String(fm.entries.id.value) : null;
+    if (vid) {
+      if (!idFiles.has(vid)) idFiles.set(vid, []);
+      idFiles.get(vid)?.push(rel);
+    } else {
+      rep.fail(`compat view ${rel} has no id (03 §2.1)`);
+    }
+    const target = fm.entries.resolves_to ? fm.entries.resolves_to.value : null;
+    if (typeof target !== 'string' || !target) {
+      rep.fail(`compat view ${rel} has no resolves_to id (02 §11.2)`);
+    } else if (!idFiles.has(target)) {
+      rep.fail(`compat view ${rel}: resolves_to id "${target}" matches no committed document (02 §11.4, N2)`);
+    }
+    for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s]+)\)/g)) {
+      const t = m[1];
+      if (/^(https?:|mailto:|#|r2:|s3:)/.test(t)) continue;
+      const filePart = t.split('#')[0];
+      if (!filePart) continue;
+      const resolved = path.resolve(path.dirname(abs), decodeURIComponent(filePart));
+      if (!exists(resolved)) rep.fail(`dead semantic pointer in compat view ${rel}: (${t}) does not resolve (03 §4)`);
+    }
+  }
+
   for (const [id, files] of idFiles) {
     if (files.length > 1) rep.fail(`duplicate id ${id} across: ${files.join(', ')} (03 §6)`);
   }

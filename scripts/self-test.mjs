@@ -816,7 +816,6 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     assert.equal(r.code, 0, r.out);
   });
 
-  // red until verify scans view stubs (skill/02 §11.4) — removed by the verify implementation task
   await t.test('unknown resolves_to id fails verify', () => {
     const text = fs.readFileSync(stubPath, 'utf8');
     fs.writeFileSync(stubPath, text.replace('resolves_to: orchestrator', 'resolves_to: no-such-id'));
