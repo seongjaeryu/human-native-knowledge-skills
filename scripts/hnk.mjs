@@ -1967,6 +1967,7 @@ function structureVerify(root, rep) {
       } catch {
         continue; // adopted frontmatter-less Living docs are advisory-only (03 §5.1)
       }
+      if (fm.entries.type && fm.entries.type.value === 'view') continue; // the view scan owns stubs (id join + stub checks) — avoid a double id push (02 §11.3)
       const id = fm.entries.id ? String(fm.entries.id.value) : null;
       if (id) {
         if (!idFiles.has(id)) idFiles.set(id, []);

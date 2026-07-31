@@ -952,4 +952,43 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     fs.rmSync(viewAPath);
     fs.rmSync(viewBPath);
   });
+
+  await t.test('valid view stub inside the Living layer passes verify (02 §11.3)', () => {
+    const livingStubPath = path.join(root, 'wiki', 'legacy-plan-stub.md');
+    fs.writeFileSync(livingStubPath, okfDoc({
+      id: 'view-0007-living-stub',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'orchestrator',
+      summary: 'Compat view: the authoritative plan lives in .context.',
+    }, [
+      'Authoritative: [target](../.context/_global/orchestrator.md)',
+      'Keywords: legacy plan compat view fixture living layer stub',
+    ].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    fs.rmSync(livingStubPath);
+  });
+
+  await t.test('view stub inside the Living layer is still scanned (unresolvable resolves_to fails)', () => {
+    const livingStubPath = path.join(root, 'wiki', 'legacy-plan-stub.md');
+    fs.writeFileSync(livingStubPath, okfDoc({
+      id: 'view-0007-living-stub',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'no-such-id',
+      summary: 'Compat view: the authoritative plan lives in .context.',
+    }, [
+      'Authoritative: [target](../.context/_global/orchestrator.md)',
+      'Keywords: legacy plan compat view fixture living layer stub',
+    ].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.notEqual(r.code, 0);
+    assert.match(r.out, /resolves_to/);
+    fs.rmSync(livingStubPath);
+  });
 });
