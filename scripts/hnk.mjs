@@ -1901,7 +1901,7 @@ function buildStatus(root) {
 }
 
 // ---------------------------------------------------------------------------
-// Global verify (02 §7, 03 §6, 06 §6, 07 §8, 08 §12, 09 §7)
+// Global verify (02 §7, 02 §11, 03 §6, 06 §6, 07 §8, 08 §12, 09 §7)
 // ---------------------------------------------------------------------------
 
 /**
@@ -1948,16 +1948,83 @@ function structureVerify(root, rep) {
     } catch (e) {
       rep.fail(`frontmatter subset violation in ${rel}: ${/** @type {Error} */ (e).message}`);
     }
-    // Semantic pointers: relative links must resolve (03 §4).
-    for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s]+)\)/g)) {
-      const target = m[1];
-      if (/^(https?:|mailto:|#|r2:|s3:)/.test(target)) continue;
-      const filePart = target.split('#')[0];
-      if (!filePart) continue;
-      const resolved = path.resolve(path.dirname(abs), decodeURIComponent(filePart));
-      if (!exists(resolved)) rep.fail(`dead semantic pointer in ${rel}: (${target}) does not resolve (03 §4)`);
+    verifyDeadPointers(rel, abs, text, rep);
+  }
+
+  // Living-layer docs join the id namespace too (02 §11.4, 03 §5.1): a
+  // resolves_to may name any committed document, not just .context/. Adopted
+  // docs that fail to parse are advisory-only (03 §5.1) — they contribute no
+  // id and are not a failure here (verify is not made stricter on them).
+  const livingDir = livingLayerDir(root);
+  if (livingDir && exists(livingDir)) {
+    const livingPrefix = path.relative(root, livingDir).split(path.sep).join('/');
+    const livingSkip = new Set(['.git', 'node_modules']);
+    for (const rel of walkFiles(livingDir, (d) => livingSkip.has(d.split('/').pop() ?? d))) {
+      if (!rel.endsWith('.md')) continue;
+      let fm;
+      try {
+        ({ fm } = parseDocument(readText(path.join(livingDir, rel))));
+      } catch {
+        continue; // adopted frontmatter-less Living docs are advisory-only (03 §5.1)
+      }
+      if (fm.entries.type && fm.entries.type.value === 'view') continue; // the view scan owns stubs (id join + stub checks) — avoid a double id push (02 §11.3)
+      const id = fm.entries.id ? String(fm.entries.id.value) : null;
+      if (id) {
+        if (!idFiles.has(id)) idFiles.set(id, []);
+        idFiles.get(id)?.push(`${livingPrefix}/${rel}`);
+      }
     }
   }
+
+  // Compat views (02 §11): stubs outside .context/ resolve by id. Two-phase
+  // so resolution is order-independent: every view id is known (phase 1)
+  // before any stub's resolves_to is validated against it (phase 2) — a
+  // stub earlier in file-walk order can still reject a target that only
+  // turns out to be another view, rather than being processed on a whim of
+  // the OS directory order.
+  const viewSkip = new Set(['.git', 'node_modules', '.context']);
+  /** @type {{rel: string, abs: string, text: string, fm: Frontmatter}[]} */
+  const viewStubs = [];
+  /** @type {Set<string>} */
+  const viewIds = new Set();
+  for (const rel of walkFiles(root, (d) => viewSkip.has(d.split('/').pop() ?? d))) {
+    if (!rel.endsWith('.md')) continue;
+    const abs = path.join(root, rel);
+    const text = readText(abs);
+    if (!text.startsWith('---')) continue; // no frontmatter fence at all
+    const fenceBody = /^---\r?\n([\s\S]*?)\r?\n---\r?(?:\n|$)/.exec(text);
+    if (!fenceBody) continue; // frontmatter fence never closes — not a view candidate
+    if (!/^type:\s*"?view"?\s*\r?$/m.test(fenceBody[1])) continue; // not a view stub (region-scoped: body mentions don't count)
+    let fm;
+    try {
+      ({ fm } = parseDocument(text));
+    } catch (e) {
+      rep.fail(`compat view ${rel}: frontmatter subset violation: ${/** @type {Error} */ (e).message} (03 §3)`);
+      continue;
+    }
+    if (!fm.entries.type || fm.entries.type.value !== 'view') continue; // body mention, not a view stub
+    const vid = fm.entries.id ? String(fm.entries.id.value) : null;
+    if (vid) {
+      if (!idFiles.has(vid)) idFiles.set(vid, []);
+      idFiles.get(vid)?.push(rel);
+      viewIds.add(vid);
+    } else {
+      rep.fail(`compat view ${rel} has no id (03 §2.1)`);
+    }
+    viewStubs.push({ rel, abs, text, fm });
+  }
+  for (const { rel, abs, text, fm } of viewStubs) {
+    const target = fm.entries.resolves_to ? fm.entries.resolves_to.value : null;
+    if (typeof target !== 'string' || !target) {
+      rep.fail(`compat view ${rel} has no resolves_to id (02 §11.2)`);
+    } else if (viewIds.has(target)) {
+      rep.fail(`compat view ${rel}: resolves_to id "${target}" names a view — the target must be the authoritative document (02 §11.2)`);
+    } else if (!idFiles.has(target)) {
+      rep.fail(`compat view ${rel}: resolves_to id "${target}" matches no committed document (02 §11.4, N2)`);
+    }
+    verifyDeadPointers(`compat view ${rel}`, abs, text, rep);
+  }
+
   for (const [id, files] of idFiles) {
     if (files.length > 1) rep.fail(`duplicate id ${id} across: ${files.join(', ')} (03 §6)`);
   }
@@ -2006,6 +2073,26 @@ function structureVerify(root, rep) {
         if (!block.includes(`${dir}/`)) rep.fail(`gitignore managed block does not ignore ${dir}/ (02 §8)`);
       }
     }
+  }
+}
+
+/**
+ * Semantic pointers: relative links in a document body must resolve (03 §4).
+ * Shared by the `.context/` document loop and the compat-view scan.
+ * @param {string} subject failure-message subject — a rel path, or a
+ *   "compat view <rel>" label for view stubs
+ * @param {string} abs absolute path of the document, for resolving links
+ * @param {string} text full file text
+ * @param {RunReport} rep
+ */
+function verifyDeadPointers(subject, abs, text, rep) {
+  for (const m of text.matchAll(/\[[^\]]*\]\(([^)\s]+)\)/g)) {
+    const target = m[1];
+    if (/^(https?:|mailto:|#|r2:|s3:)/.test(target)) continue;
+    const filePart = target.split('#')[0];
+    if (!filePart) continue;
+    const resolved = path.resolve(path.dirname(abs), decodeURIComponent(filePart));
+    if (!exists(resolved)) rep.fail(`dead semantic pointer in ${subject}: (${target}) does not resolve (03 §4)`);
   }
 }
 

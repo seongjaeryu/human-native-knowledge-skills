@@ -22,7 +22,63 @@ Before every release tag:
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+**Compat views, binding external tool structures (`skill/02` version 2 → 3,
+`skill/03` version 1 → 2).** The observed problem: agent tooling other than
+`hnk` (plan-writing skills, scaffold generators) hardcodes its own output
+paths; an installed hnk structure either fractures into two document trees
+or, if the tool is resisted, the tool breaks. The mapping principle of
+`skill/02` §10 ("audit-existing maps, never moves") answered this only for
+documents that exist before installation — nothing covered documents an
+external tool keeps creating afterward. The structural fix (`skill/02` §11,
+new; `skill/03` §2.2 gains the `view` type, ownership of `resolves_to`
+staying with `skill/02` per the existing per-type-field-ownership rule):
+
+- A **compat view** is a committed stub, never a symlink, standing at the
+  external tool's expected path: `type: view` frontmatter with an id-only
+  `resolves_to` pointer to the authoritative document, which lives in the
+  hnk structure by default (reversible per topic, recorded in the topic's
+  `sources.md`, per the read-frequency criterion of §11.3). Symlinks were
+  measured (2026-07-31, macOS/APFS) and declined: `rg` matches nothing
+  behind one without `--follow`, `find` does not descend into a directory
+  symlink, and `core.symlinks=false` — the documented Git for Windows
+  default — checks a committed symlink out as a plain text file.
+- `verify` (`scripts/hnk.mjs`) gains the view-resolution check: a
+  region-scoped frontmatter pre-filter (a `type: view` mention inside a code
+  fence does not trigger the scan), Living-layer document ids folded into
+  the same id-resolution namespace as `.context/` (view stubs excluded from
+  that fold so the scan's own id push does not double-register them), a
+  two-phase scan so a stub resolving to another view is rejected
+  deterministically regardless of file-walk order, and a shared
+  `verifyDeadPointers` helper so the compat-view scan and the `.context/`
+  document loop enforce the same dead-link rule (`03-okf.md` §4). View ids
+  join the existing duplicate-id check.
+- New `templates/context/view-stub.md` (instantiation template: guidance
+  lives in ai-instruction comments since comments are forbidden inside the
+  machine-readable subset; `{{UPPER_SNAKE_CASE}}` placeholder tokens) and
+  new `guides/coexistence/superpowers.md` (the tool-specific recipe promised
+  by §11.3: superpowers v5.1.0's hardcoded plan/design-doc paths cited by
+  file and line, a CLAUDE.md override block, the artifact mapping to
+  `ai-spec.md`/`plan.md`, and an optional per-artifact hook-enforced strict
+  mode).
+
+Evidence: `scripts/self-test.mjs` gained the
+`'verify: compat views resolve by id (02 §11.4)'` test, 12 new subtests
+pinning the full contract (valid resolution, unknown id, dead link, missing
+summary, code-fence non-trigger, Living-layer target, quoted `type` value,
+CRLF stub, view-to-view rejection, duplicate-id interaction, and the stub
+living inside the Living layer itself, both directions) — suite 31 → 44,
+all green.
+
+Core-audit run over this branch's diff (Task 8, `main...HEAD`): D1–D3 and N2
+pass (every added rule states its serving degree; core cited by anchor,
+never restated; no rule contradicts another; pointers and the anchors cited
+in §11 and the coexistence guide all resolve); H-items pass (§11.1's
+symlink claims are dated and measured, the guide's superpowers claims cite
+version and line numbers). P-items (`examples/` regeneration, SemVer bump)
+are release-cut concerns per the Release rule above, deferred to the next
+tag.
 
 ## [1.1.0] — 2026-07-30
 
