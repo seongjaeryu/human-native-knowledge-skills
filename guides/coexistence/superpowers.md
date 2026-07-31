@@ -31,22 +31,22 @@ project):
 ```markdown
 ## Document placement (overrides any skill's default)
 
-Design docs and plans from any skill — including superpowers
-`writing-plans` and `brainstorming` — MUST be saved into the hnk
-structure: design content into the active topic's `ai-spec.md`,
-execution plans as the active topic's `plan.md` (skill/02 §4.1) —
-EXCEPT artifacts recorded as reversed in the topic's `sources.md`
-(skill/02 §11.3): those keep their authoritative file at the tool's
-own path, and the topic binds them with a pointer row. Do not
-create or write into `docs/superpowers/` otherwise; where a legacy
-path exists or an external consumer expects one, stand a
-compat-view stub there per skill/02 §11
-(template: templates/context/view-stub.md).
+- Design docs and plans from any skill — including superpowers
+  `writing-plans` and `brainstorming` — are saved into the hnk
+  structure: design content into the active topic's `ai-spec.md`,
+  execution plans as the active topic's `plan.md` (skill/02 §4.1).
+- Exception: an artifact recorded as reversed in the topic's
+  `sources.md` (skill/02 §11.3) keeps its authoritative file at the
+  tool's own path; the topic binds it with a pointer row.
+- Do not create or write into `docs/superpowers/` except (a) a
+  compat-view stub standing at a legacy or externally-expected path
+  (skill/02 §11), or (b) the authoritative file of an artifact
+  recorded as reversed.
 ```
 
 The block defers to recorded reversals, so reversing an artifact needs no
-CLAUDE.md edit — record the `sources.md` row per §3 and the block's
-exception covers it.
+CLAUDE.md edit — record the `sources.md` row per §3 and the second bullet
+covers it.
 
 ## 2. Artifact mapping
 
@@ -70,11 +70,13 @@ flight. Record the choice, and its reason, as a row in `sources.md`.
 ## 4. Strict mode (optional consumer profile)
 
 The override block in §1 depends on model compliance with CLAUDE.md, same
-as any instruction. Projects wanting a guarantee under the *default*
-orientation add a Claude Code `PreToolUse` hook (in `settings.json`) that
+as any instruction. Projects wanting a guarantee where no artifact is
+reversed add a Claude Code `PreToolUse` hook (in `settings.json`) that
 denies `Write`/`Edit` on `docs/superpowers/**` with a redirect message
 naming the hnk path — instantiate any compat-view stub first, since the
-hook would otherwise deny the stub write §1 mandates too. Do not enable
-this hook under a reversed orientation: it would block the authoritative
-write §3 assigns to superpowers. Enforcement of this kind is a consumer
-choice, outside what this protocol requires.
+hook would otherwise deny the stub write §1 mandates too. Any per-artifact
+reversal recorded per §3 breaks the blanket guarantee: disable the hook or
+narrow its deny pattern to exclude that artifact's path, and re-check the
+pattern whenever a new reversal row lands in a topic's `sources.md`.
+Enforcement of this kind is a consumer choice, outside what the hnk
+structure requires.
