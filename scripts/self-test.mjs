@@ -948,9 +948,29 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     ].join('\n')));
     const r = runCli(root, ['verify']);
     assert.notEqual(r.code, 0);
-    assert.match(r.out, /names another view/);
+    assert.match(r.out, /names a view/);
     fs.rmSync(viewAPath);
     fs.rmSync(viewBPath);
+  });
+
+  await t.test('view stub id equal to a .context/ document id fails the duplicate-id check', () => {
+    const dupIdViewPath = path.join(stubDir, 'dup-id-view.md');
+    fs.writeFileSync(dupIdViewPath, okfDoc({
+      id: 'orchestrator', // collides with .context/_global/orchestrator.md's id
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'wiki-index', // distinct, valid, non-view target — isolates the duplicate-id failure
+      summary: 'Compat view whose own id collides with an existing document (invalid).',
+    }, [
+      'Authoritative: [target](../../../wiki/index.md)',
+      'Keywords: duplicate id compat view fixture',
+    ].join('\n')));
+    const r = runCli(root, ['verify']);
+    assert.notEqual(r.code, 0);
+    assert.match(r.out, /duplicate id/);
+    fs.rmSync(dupIdViewPath);
   });
 
   await t.test('valid view stub inside the Living layer passes verify (02 §11.3)', () => {

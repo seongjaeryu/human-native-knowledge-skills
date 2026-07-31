@@ -2018,7 +2018,7 @@ function structureVerify(root, rep) {
     if (typeof target !== 'string' || !target) {
       rep.fail(`compat view ${rel} has no resolves_to id (02 §11.2)`);
     } else if (viewIds.has(target)) {
-      rep.fail(`compat view ${rel}: resolves_to id "${target}" names another view — the target must be the authoritative document (02 §11.2)`);
+      rep.fail(`compat view ${rel}: resolves_to id "${target}" names a view — the target must be the authoritative document (02 §11.2)`);
     } else if (!idFiles.has(target)) {
       rep.fail(`compat view ${rel}: resolves_to id "${target}" matches no committed document (02 §11.4, N2)`);
     }
