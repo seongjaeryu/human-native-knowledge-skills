@@ -440,11 +440,12 @@ apply.
 ### 11.4 Verification
 
 `node scripts/hnk.mjs verify` scans committed `.md` files outside
-`.context/` for `type: view` frontmatter and fails on: a `resolves_to`
-that names no committed document id; a dead relative link in the stub
-body ([`03-okf.md` §4](03-okf.md#4-semantic-pointers)); a missing
-`summary`. A stub that cannot be resolved misleads exactly the consumer
-it exists to orient (N2).
+`.context/` for `type: view` frontmatter and fails on: a `resolves_to` that
+names no committed document id; a `resolves_to` naming another view's id —
+the target must be the authoritative document (§11.2); a dead relative link
+in the stub body ([`03-okf.md` §4](03-okf.md#4-semantic-pointers)); a
+missing `summary`. A stub that cannot be resolved misleads exactly the
+consumer it exists to orient (N2).
 
 ## Version History
 
