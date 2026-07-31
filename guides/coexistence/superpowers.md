@@ -13,8 +13,9 @@ This guide is the tool-specific recipe promised by
 [`02-context-architecture.md` §11.3](../../skill/02-context-architecture.md#113-orientation):
 a coexistence pattern for the superpowers plugin (observed at v5.1.0), whose
 plan-writing skills hardcode output paths outside the hnk structure.
-`writing-plans` saves to `docs/superpowers/plans/YYYY-MM-DD-<name>.md` (its
-`SKILL.md` line 18, noting "(User preferences for plan location override
+`writing-plans` saves to
+`docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` (its `SKILL.md`
+line 18; line 19 notes "(User preferences for plan location override
 this default)"); `brainstorming` saves design docs to
 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (lines 29, 111). Left
 alone, these fracture an installed hnk structure into two document trees.
@@ -40,6 +41,11 @@ expects it, stand a compat-view stub there per skill/02 §11
 (template: templates/context/view-stub.md).
 ```
 
+The block encodes §3's *default* orientation. Under a reversed orientation
+for a given artifact, drop the NEVER sentence — the mapping sentences
+above it still hold — since superpowers writing into `docs/superpowers/`
+is then the sanctioned path, not the violation the sentence forbids.
+
 ## 2. Artifact mapping
 
 | superpowers artifact | hnk location | Note |
@@ -62,8 +68,11 @@ flight. Record the choice, and its reason, as a row in `sources.md`.
 ## 4. Strict mode (optional consumer profile)
 
 The override block in §1 depends on model compliance with CLAUDE.md, same
-as any instruction. Projects wanting a guarantee add a Claude Code
-`PreToolUse` hook (in `settings.json`) that denies `Write`/`Edit` on
-`docs/superpowers/**` with a redirect message naming the hnk path.
-Enforcement of this kind is a consumer choice, outside what this protocol
-requires.
+as any instruction. Projects wanting a guarantee under the *default*
+orientation add a Claude Code `PreToolUse` hook (in `settings.json`) that
+denies `Write`/`Edit` on `docs/superpowers/**` with a redirect message
+naming the hnk path — instantiate any compat-view stub first, since the
+hook would otherwise deny the stub write §1 mandates too. Do not enable
+this hook under a reversed orientation: it would block the authoritative
+write §3 assigns to superpowers. Enforcement of this kind is a consumer
+choice, outside what this protocol requires.
