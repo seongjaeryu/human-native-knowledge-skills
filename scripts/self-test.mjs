@@ -1011,4 +1011,56 @@ test('verify: compat views resolve by id (02 §11.4)', async (t) => {
     assert.match(r.out, /resolves_to/);
     fs.rmSync(livingStubPath);
   });
+
+  await t.test('template instantiation: templates/context/view-stub.md substituted end-to-end passes verify (pins template <-> subset grammar <-> verify coherence, D6)', () => {
+    const templatePath = path.join(path.dirname(HNK), '..', 'templates', 'context', 'view-stub.md');
+    const raw = fs.readFileSync(templatePath, 'utf8');
+    // Strip every <!-- ai-instruction: … --> comment; they can span multiple lines.
+    const stripped = raw.replace(/<!--\s*ai-instruction:[\s\S]*?-->\r?\n?/g, '');
+    const tokens = {
+      VIEW_ID: 'view-1001-template-pin',
+      AUTHORITATIVE_ID: 'orchestrator', // the fixture's .context/_global/orchestrator.md
+      AUTHORITATIVE_RELATIVE_PATH: '../../../.context/_global/orchestrator.md', // depth from docs/external-tool/plans/
+      AUTHORITATIVE_SUMMARY_ONE_LINE: 'the orchestrator document with standing rules the AI reads first',
+      AUTHORITATIVE_KEYWORDS: 'orchestrator standing rules template pin fixture',
+    };
+    let instantiated = stripped;
+    for (const [key, value] of Object.entries(tokens)) instantiated = instantiated.split(`{{${key}}}`).join(value);
+    assert.doesNotMatch(instantiated, /\{\{/, 'every template placeholder must be substituted');
+    const instantiatedPath = path.join(stubDir, 'instantiated.md');
+    fs.writeFileSync(instantiatedPath, instantiated);
+    const r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    fs.rmSync(instantiatedPath);
+  });
+
+  await t.test('llm build scans a Living-layer view stub and lists it in llm.txt (02 §11.3)', () => {
+    const llmTxtPath = path.join(root, 'llm.txt');
+    const before = fs.readFileSync(llmTxtPath, 'utf8');
+    assert.ok(!before.includes('view-2001-living-scan'), 'sanity: id absent from llm.txt before the stub exists');
+
+    const livingStubPath = path.join(root, 'wiki', 'living-scan-stub.md');
+    fs.writeFileSync(livingStubPath, okfDoc({
+      id: 'view-2001-living-scan',
+      type: 'view',
+      status: 'active',
+      version: 1,
+      related: [],
+      resolves_to: 'orchestrator',
+      summary: 'Compat view: llm build scan pin fixture.',
+    }, [
+      'Authoritative: [target](../.context/_global/orchestrator.md)',
+      'Keywords: llm build scan compat view fixture living layer',
+    ].join('\n')));
+
+    const r = runCli(root, ['llm', 'build']);
+    assert.equal(r.code, 0, r.out);
+    const after = fs.readFileSync(llmTxtPath, 'utf8');
+    assert.match(after, /view-2001-living-scan/);
+    assert.match(after, /Compat view: llm build scan pin fixture\./); // knowledge-map row + reading-order line both carry the summary
+
+    fs.rmSync(livingStubPath);
+    const rebuilt = runCli(root, ['llm', 'build']); // restore llm.txt so later state stays consistent (idiom per the precondition build above)
+    assert.equal(rebuilt.code, 0, rebuilt.out);
+  });
 });
