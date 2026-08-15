@@ -1560,9 +1560,23 @@ function sniffBinary(absPath) {
   } catch { return false; }
   if (sample.length === 0) return false;
   if (sample.includes(0)) return true;
+  // Tolerate a multibyte char cut at the sample boundary — only when the read
+  // was actually truncated (a complete file has no boundary to tolerate), and
+  // by walking back over the partial sequence instead of a fixed trim: a fixed
+  // 3-byte trim can itself land mid-character in multibyte text (CJK prose)
+  // and misclassify a text file as binary.
+  let end = sample.length;
+  if (end === 8192) {
+    let i = end - 1;
+    while (i >= end - 3 && (sample[i] & 0xc0) === 0x80) i--;
+    if ((sample[i] & 0xc0) === 0xc0) {
+      const lead = sample[i];
+      const seqLen = lead >= 0xf0 ? 4 : lead >= 0xe0 ? 3 : 2;
+      if (i + seqLen > end) end = i;
+    }
+  }
   try {
-    // Tolerate a multibyte char cut at the sample boundary.
-    new TextDecoder('utf-8', { fatal: true }).decode(sample.subarray(0, Math.max(0, sample.length - 3)));
+    new TextDecoder('utf-8', { fatal: true }).decode(sample.subarray(0, end));
     return false;
   } catch { return true; }
 }
