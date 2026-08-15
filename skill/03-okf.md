@@ -2,7 +2,7 @@
 id: skill-03-okf
 type: skill
 status: active
-version: 1
+version: 2
 related: [core-philosophy, core-audit, skill-01-principles, skill-02-context-architecture, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-08-conversation-archive, skill-09-visual-assets]
 summary: "Open Knowledge Format: common frontmatter, the machine-readable subset grammar (M2 freeze), semantic pointers, and llm.txt generation for target projects."
 ---
@@ -83,6 +83,7 @@ required is decided per type by the owning specification.
 | `profile` | target: `_global/project-profile.md` | [07-pre-interview.md](07-pre-interview.md) |
 | `archive-index` | target: `_archive/index.md` | [08-conversation-archive.md](08-conversation-archive.md) |
 | `media-index` | target: `_media/index.md` | [09-visual-assets.md](09-visual-assets.md) |
+| `view` | target: compat-view stubs at external tool paths | [02-context-architecture.md](02-context-architecture.md) §11 |
 
 ### 2.3 Per-type fields live with their owners
 
@@ -307,3 +308,14 @@ session.
 
 All four checks run inside `node scripts/hnk.mjs verify`; the audit items are
 defined in [`core/audit.md`](../core/audit.md).
+
+## Version History
+
+- **version 2** — 2026-08-01. Added the `view` type to the §2.2 enum;
+  its `resolves_to` field is owned by
+  [02-context-architecture.md](02-context-architecture.md) §11 per the
+  ownership rule of §2.3. **Why:** compat views need a `type` so the
+  toolchain can find and verify stubs standing outside `.context/`.
+  **How:** enum row only — the subset grammar (§3.1–3.2) and the common
+  field set (§2.1), frozen at M2 (§3.5), are unchanged.
+- **version 1** — initial specification.

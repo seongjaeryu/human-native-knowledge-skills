@@ -99,7 +99,7 @@ Findings from every verification run — including our own defects — are in [C
 | `orchestrator.md` | The 8-step installation state machine |
 | `templates/` | Files the AI instantiates into target projects |
 | `scripts/hnk.mjs` | Single-file, zero-dependency reference script |
-| `guides/` | Harness-independent guidance (viewers, enforcement, storage) |
+| `guides/` | Harness-independent guidance (viewers, enforcement, storage, coexistence) |
 | `examples/` | A fully instantiated demo target project (instance demo, not spec) |
 
 ## Contributing and feedback

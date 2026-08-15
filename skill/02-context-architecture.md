@@ -2,7 +2,7 @@
 id: skill-02-context-architecture
 type: skill
 status: active
-version: 2
+version: 3
 related: [core-philosophy, core-audit, skill-01-principles, skill-03-okf, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-08-conversation-archive, skill-09-visual-assets]
 summary: "Structural specification of an installed target project: three-level .context/ inheritance, central archive and media stores, flat topic folders, the Living layer, and the gitignore contract."
 ---
@@ -27,6 +27,7 @@ below exists to serve one of the two degrees of understanding
 | Mandatory Living layer | nth degree | delivery step of [core §7](../core/philosophy.md#7-the-ai-native-storage-process) |
 | Hidden `.context/` with write/read paths | first degree | [core §8](../core/philosophy.md#8-storageconsumption-separation) |
 | Exactly two git-ignored directories | nth degree | honesty of the record, [core §9](../core/philosophy.md#9-honesty-of-the-record) |
+| Compat views and the optional topic `plan.md` — external tool paths bound by stubs (§4.1, §11) | nth degree | mapping principle of §10; [core §2](../core/philosophy.md#2-first-principle--the-two-stage-condition-of-accumulation) |
 
 ## 2. The installed layout
 
@@ -88,6 +89,7 @@ target/
 │           ├── sources.md           # collected originals and references
 │           ├── ai-spec.md           # the spec — diagrams first (04), Version History (06)
 │           ├── safety-rules.md      # OPTIONAL — topic-scoped temporary rules
+│           ├── plan.md              # OPTIONAL — execution plan for the current spec version (§4.1)
 │           └── visuals/             # committed text-format assets (*.svg, *.mmd)
 ├── wiki/                            # Living layer — or an existing docs/ designated instead
 └── scripts/
@@ -229,6 +231,7 @@ Appendix A.)
 | `sources.md` | collected requirements, references, release-note originals; pointer document for external material | this document + [`03-okf.md`](03-okf.md) |
 | `ai-spec.md` | the master plan/design document — diagrams first, Node IDs, Version History section | [`04-diagram-first.md`](04-diagram-first.md), [`06-lifecycle-and-versioning.md`](06-lifecycle-and-versioning.md) |
 | `safety-rules.md` (optional) | rules active only while this topic's work is underway | this document |
+| `plan.md` (optional) | execution plan for the current spec version; external plan-writing tools' artifacts land or bind here (§11) | this document |
 | `visuals/` | text-format visual assets (`.svg`, `.mmd`); Mermaid inline in `ai-spec.md` is preferred | [`09-visual-assets.md`](09-visual-assets.md) |
 
 ### 4.2 Where the removed subfolders went
@@ -373,8 +376,101 @@ procedure must honor:
   ones. Conflicting template updates are proposed as diffs
   (propose-then-confirm), never applied silently.
 
+## 11. Compat views — binding external tool structures
+
+Agent tooling other than `hnk` (plan-writing skills, scaffold generators)
+writes documents to paths those tools hardcode. The mapping principle of
+§10 — *audit-existing maps, never moves* — covers documents that exist
+before installation; this section extends it to documents external tools
+keep creating afterwards. It serves nth-degree understanding
+([core §2](../core/philosophy.md#2-first-principle--the-two-stage-condition-of-accumulation)):
+retrieval must keep working from every entry point a past session may have
+recorded, including the external tool's own path.
+
+A **compat view** is a committed stub document standing at the external
+tool's expected path; the authoritative document lives in the hnk
+structure. One physical document, two entry points.
+
+### 11.1 The stub is a regular file, never a symlink
+
+Measured (2026-07-31, macOS/APFS): `rg` matches nothing behind a file or
+directory symlink unless invoked with `--follow`; `find` does not descend
+into a directory symlink; git stores symlinks as mode-120000 objects and,
+under `core.symlinks=false` — the documented Git for Windows default —
+checks them out as plain text files. A symlink is therefore invisible to
+the content-search half of retrieval and non-portable; a stub file is
+searchable, portable, and carries its own resolution metadata.
+
+### 11.2 Stub format
+
+A view stub carries the common frontmatter of
+[`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document) with
+`type: view` plus one owned field:
+
+| Field | Rule |
+| --- | --- |
+| `resolves_to` | the **id** of the authoritative document — an id, not a path, per the machine-layer rule of [`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document); failed resolution is audit item [N2](../core/audit.md#n--nth-degree-devices-transfer-time-understanding) |
+
+A stub's own `id` carries the `view-` prefix with a kebab-case slug (e.g.
+`view-legacy-plan`); like every id it must be unique across the project
+([03-okf.md §6](03-okf.md#6-what-verification-enforces-from-this-document)).
+The prefix is a convention only — unlike the session and media id schemes
+([`08-conversation-archive.md`](08-conversation-archive.md) §3,
+[`09-visual-assets.md`](09-visual-assets.md) §3), `verify` does not
+regex-check it.
+
+Body contract, three parts in order:
+
+1. one line naming the authoritative location as a relative link — the
+   fast path;
+2. one line for the stale case: resolve `resolves_to` via `llm.txt` or
+   the archive index — ids, not paths, survive moves
+   ([`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document));
+3. a `Keywords:` line copying the authoritative document's key terms —
+   the stub's content-search surface.
+
+### 11.3 Orientation
+
+Default: the authoritative file lives in the hnk structure and the view
+stands at the external path. Reverse the orientation — authoritative file
+at the external path, a pointer row in the topic's `sources.md` — when the
+external tool re-reads its own artifacts more often than hnk consumers do.
+Record the choice and its reason as a row in the topic's `sources.md`.
+Tool-specific recipes live in [`guides/coexistence/`](../guides/coexistence/).
+A stub standing inside a designated Living layer is an ordinary
+Living-layer document: `llm build` scans it and the sync rules of §6
+apply.
+
+### 11.4 Verification
+
+`node scripts/hnk.mjs verify` scans committed `.md` files outside
+`.context/` for `type: view` frontmatter and fails on: a frontmatter subset
+violation on a view candidate ([`03-okf.md`
+§3](03-okf.md#3-the-machine-readable-subset-grammar)) — a missing `summary`
+is one instance; a missing `id`; a missing `resolves_to` field; a
+`resolves_to` naming a view's id (its own or another's) — the target must be
+the authoritative document (§11.2); a `resolves_to` that names no committed
+document id; a dead relative link in the stub body ([`03-okf.md`
+§4](03-okf.md#4-semantic-pointers)). A stub that cannot be resolved misleads
+exactly the consumer it exists to orient (N2).
+
 ## Version History
 
+- **version 3** — 2026-08-01. Added §11 (compat views), the optional
+  `plan.md` row in §4.1, and the matching §1 derivation row. **Why:**
+  plan-writing agent skills (observed: superpowers `writing-plans` and
+  `brainstorming`, v5.1.0) hardcode their own output paths
+  (`docs/superpowers/…`); an installed structure either fractures or, if
+  the tool is resisted, the tool breaks. §10's mapping principle answered
+  this for pre-existing documents; it needed extension to documents
+  external tools keep creating. **How:** one physical document, two entry
+  points — the authoritative file in the hnk structure, a searchable stub
+  (`type: view`, id-first resolution per
+  [`03-okf.md` §2.1](03-okf.md#21-common-fields-every-document)) at
+  the tool's path. OS symlinks were measured and declined: invisible to
+  `rg`'s default content search, degraded to plain text by
+  `core.symlinks=false` checkouts. Orientation is reversible per topic by
+  the read-frequency criterion (§11.3).
 - **version 2** — 2026-07-30. Added §3.2 (rule-collision resolution order)
   and §3.3 (invariant row schema with the `Level` column and rejection
   harvesting). **Why:** the first community feedback on this project

@@ -74,6 +74,7 @@ template says so):
 - templates/context/topic/sources.md
 - templates/context/topic/ai-spec.md
 - templates/context/topic/safety-rules.md (optional)
+- templates/context/view-stub.md (instantiated per compat view, at the external tool's own path — skill/02 §11)
 - templates/context/gitignore-block.txt (appended to the target .gitignore, idempotent via markers)
 - templates/living/index.md (create-wiki path only; designated docs/ uses pointer mapping instead)
 
@@ -88,6 +89,7 @@ guides/ — harness-independent reference documents:
 - guides/viewers/obsidian.md, guides/viewers/quartz.md
 - guides/enforcement/eslint.md, guides/enforcement/generic-grep.md
 - guides/storage/cloudflare-r2.md
+- guides/coexistence/superpowers.md
 
 examples/ — instance demo (see the boundary rule above):
 

@@ -99,7 +99,7 @@ summary: "Topic 0001-brew-log-format created: ai-spec v1 (NODE-BREW-01..03),
 | `orchestrator.md` | 8단계 설치 상태 머신 |
 | `templates/` | AI가 대상 프로젝트에 인스턴스화하는 파일들 |
 | `scripts/hnk.mjs` | 단일 파일 무의존성 참조 스크립트 |
-| `guides/` | 하니스 비종속 참고 가이드 (뷰어, 용어 강제, 스토리지) |
+| `guides/` | 하니스 비종속 참고 가이드 (뷰어, 용어 강제, 스토리지, 공존) |
 | `examples/` | 실제 설치 결과물 데모 (인스턴스 데모이지 스펙이 아님) |
 
 ## 기여와 피드백
