@@ -283,6 +283,32 @@ test('node version gate accepts the running Node', () => {
   assert.equal(hnk.nodeVersionError(), null);
 });
 
+test('sniffBinary: multibyte text is never misread as binary', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hnk-sniff-'));
+  try {
+    // Whole file smaller than the 8 KiB sample window, ending in CJK + ASCII
+    // tail: the former fixed 3-byte trim cut into the final 3-byte character
+    // and misclassified the file (observed on a real Korean session card).
+    const small = path.join(dir, 'small.md');
+    fs.writeFileSync(small, '# 카드\n\n한국어 본문이 여기서 종료.\n');
+    assert.equal(hnk.sniffBinary(small), false, 'complete CJK file must not be binary');
+
+    // File larger than the sample window where the former fixed trim landed
+    // mid-character: 8187 ASCII bytes, then CJK — the 8192-byte cut leaves a
+    // partial char whose removal needs a boundary walk, not always 3 bytes.
+    const big = path.join(dir, 'big.md');
+    fs.writeFileSync(big, 'a'.repeat(8187) + '가나다라마 이후 본문이 계속된다');
+    assert.equal(hnk.sniffBinary(big), false, 'boundary-cut CJK file must not be binary');
+
+    // Genuine binary keeps failing: NUL bytes short-circuit.
+    const bin = path.join(dir, 'payload.md');
+    fs.writeFileSync(bin, Buffer.from([0x00, 0x01, 0x02, 0x03]));
+    assert.equal(hnk.sniffBinary(bin), true, 'NUL content stays binary');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // End-to-end fixture tests
 // ---------------------------------------------------------------------------
