@@ -37,11 +37,11 @@ The problem this solves is **knowledge debt**: the *principal* is every AI outpu
 
 ## What a session leaves behind
 
-This is a real card from the demo install (excerpt — full card in [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260730-061851-brew-log-format-specification.md)):
+This is a real card from the demo install (excerpt — full card in [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260815-160252-brew-log-format-specification.md)):
 
 ```markdown
 ---
-id: session-20260730-061851-brew-log-format-specification
+id: session-20260815-160252-brew-log-format-specification
 meta: {author: seongjaeryu, agent: claude-code@claude-fable-5}
 mode: confirm-spec-changes-only
 raw_fidelity: reconstructed
@@ -74,7 +74,7 @@ This repository applies its own philosophy to itself — every claim below is re
 
 - **Real-URL install verified** before tagging v1.0.0: a fresh agent session given only the GitHub URL fetched 24 files (343,410 bytes, zero refetches), confirmed the script and templates byte-identical over the URL path (SHA-256), and completed the install with `verify` at 0 failures / 0 warnings.
 - **Three end-to-end installs green**: fresh code project, brownfield (existing `CLAUDE.md` + `docs/`, nothing moved), and a non-code knowledge project.
-- **`scripts/hnk.mjs` is one dependency-free file** (Node builtins only) with a 31-test suite, green on Node 18/20/22 in CI.
+- **`scripts/hnk.mjs` is one dependency-free file** (Node builtins only) with a test suite green on Node 18/20/22 in CI — each release's test count is recorded in [CHANGELOG.md](CHANGELOG.md).
 - **A pre-release self-audit gates every tag** ([`core/audit.md`](core/audit.md)): zero derivation/honesty failures, with hundreds of semantic pointers mechanically checked per release — each audit's numbers are recorded in [CHANGELOG.md](CHANGELOG.md).
 - **[`examples/minimal-target`](examples/README.md) is the output of a real install run** — including the disclosure of what was simulated (interview answers). We publish what the demo is, not what it pretends to be.
 

@@ -37,11 +37,11 @@ URL을 읽고 파일을 쓸 수 있는 모든 에이전트에서 동작합니다
 
 ## 세션이 남기는 것
 
-데모 설치에서 나온 실제 카드입니다 (발췌 — 전문은 [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260730-061851-brew-log-format-specification.md)):
+데모 설치에서 나온 실제 카드입니다 (발췌 — 전문은 [`examples/minimal-target`](examples/minimal-target/.context/_archive/session-20260815-160252-brew-log-format-specification.md)):
 
 ```markdown
 ---
-id: session-20260730-061851-brew-log-format-specification
+id: session-20260815-160252-brew-log-format-specification
 meta: {author: seongjaeryu, agent: claude-code@claude-fable-5}
 mode: confirm-spec-changes-only
 raw_fidelity: reconstructed
@@ -74,7 +74,7 @@ summary: "Topic 0001-brew-log-format created: ai-spec v1 (NODE-BREW-01..03),
 
 - **v1.0.0 태그 전 실 URL 설치 검증**: GitHub URL만 받은 새 에이전트 세션이 24개 파일(343,410바이트, 재시도 0)을 fetch하고, 스크립트·템플릿이 URL 경로에서 바이트 동일함을 SHA-256으로 확인한 뒤, `verify` 0 실패/0 경고로 설치 완주.
 - **설치 E2E 3종 green**: 신규 코드 프로젝트, brownfield(기존 `CLAUDE.md`·`docs/` 무이동), 비코드 지식 프로젝트.
-- **`scripts/hnk.mjs`는 무의존성 단일 파일** (Node 빌트인만), 테스트 31개, CI에서 Node 18/20/22 green.
+- **`scripts/hnk.mjs`는 무의존성 단일 파일** (Node 빌트인만), 테스트 스위트가 CI에서 Node 18/20/22 green — 릴리즈별 테스트 개수는 [CHANGELOG.md](CHANGELOG.md)에 기록됩니다.
 - **모든 태그는 릴리즈 전 자체 감사를 통과** ([`core/audit.md`](core/audit.md)): 파생/정직성 실패 0건, 릴리즈마다 수백 개 시맨틱 포인터 기계 검증 — 각 감사의 수치는 [CHANGELOG.md](CHANGELOG.md)에 기록됩니다.
 - **[`examples/minimal-target`](examples/README.md)은 실제 설치 실행의 산출물** — 무엇이 시뮬레이션이었는지(인터뷰 답변) 공시 포함. 데모가 무엇인지 공개하지, 무엇인 척하지 않습니다.
 
