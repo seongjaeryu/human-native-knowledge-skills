@@ -16,4 +16,4 @@ card.
 
 | Id | Invariant | Level | Reason | Decided by |
 | --- | --- | --- | --- | --- |
-| <a id="inv-brew-001"></a>INV-BREW-001 | The [brew-log](dictionary.md#brew-log) is append-only: no session may rewrite, reorder, or delete existing lines. | strict-negative | Past brews are the project's only history; a rewritten log cannot be verified by any later reader. | [session-20260730-061851-brew-log-format-specification](../_archive/session-20260730-061851-brew-log-format-specification.md) |
+| <a id="inv-brew-001"></a>INV-BREW-001 | The [brew-log](dictionary.md#brew-log) is append-only: no session may rewrite, reorder, or delete existing lines. | strict-negative | Past brews are the project's only history; a rewritten log cannot be verified by any later reader. | [session-20260815-160252-brew-log-format-specification](../_archive/session-20260815-160252-brew-log-format-specification.md) |
