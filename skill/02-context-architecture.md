@@ -436,6 +436,11 @@ stands at the external path. Reverse the orientation — authoritative file
 at the external path, a pointer row in the topic's `sources.md` — when the
 external tool re-reads its own artifacts more often than hnk consumers do.
 Record the choice and its reason as a row in the topic's `sources.md`.
+Decide capability-first, frequency-second: before weighing read
+frequency, ask whether the external path's primary consumer can follow
+a stub at all. Agents and humans can; a tool runtime reading fixed
+paths (continuous-integration configuration, build inputs) cannot — for
+such paths the reversed orientation is mandatory, not a choice.
 Tool-specific recipes live in [`guides/coexistence/`](../guides/coexistence/).
 A stub standing inside a designated Living layer is an ordinary
 Living-layer document: `llm build` scans it and the sync rules of §6
@@ -470,7 +475,9 @@ exactly the consumer it exists to orient (N2).
   the tool's path. OS symlinks were measured and declined: invisible to
   `rg`'s default content search, degraded to plain text by
   `core.symlinks=false` checkouts. Orientation is reversible per topic by
-  the read-frequency criterion (§11.3).
+  the read-frequency criterion (§11.3). Orientation decides
+  capability-first — a runtime consumer that cannot follow a stub forces
+  the reversed orientation — then by read frequency.
 - **version 2** — 2026-07-30. Added §3.2 (rule-collision resolution order)
   and §3.3 (invariant row schema with the `Level` column and rejection
   harvesting). **Why:** the first community feedback on this project

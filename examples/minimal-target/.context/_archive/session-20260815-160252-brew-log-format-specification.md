@@ -1,8 +1,8 @@
 ---
-id: session-20260730-061851-brew-log-format-specification
+id: session-20260815-160252-brew-log-format-specification
 type: session
-started: 2026-07-30T06:18:51Z
-ended: 2026-07-30T06:21:31Z
+started: 2026-08-15T16:02:52Z
+ended: 2026-08-15T16:04:55Z
 meta: {author: seongjaeryu, agent: claude-code@claude-fable-5}
 topic: 0001-brew-log-format
 interview: interview-0001-brew-log-format
@@ -10,9 +10,9 @@ mode: confirm-spec-changes-only
 visibility: private
 status: local-only
 raw_fidelity: reconstructed
-raw_local: .context/_archive/sessions/session-20260730-061851-brew-log-format-specification.full.md
+raw_local: .context/_archive/sessions/session-20260815-160252-brew-log-format-specification.full.md
 raw_remote: null
-raw_sha256: 3482d24a8360fb4e5ebc5b189cda4a2c3e6ac7e82157e5b3a94c7aa9b330a906
+raw_sha256: 15ce04cc168fcd4d3d8ca2b43d3aec715d081abe8ef0c6bf4d275b94f2456781
 summary: "Topic 0001-brew-log-format created: ai-spec v1 (NODE-BREW-01..03), spec-node mapping into both CLI files, INV-BREW-001 (strict-negative), first binary registered, wiki synced."
 ---
 
@@ -22,7 +22,7 @@ Define the brew-log line format as a full-topic specification and map the
 existing CLI to it, under `confirm-spec-changes-only` as recorded in
 [interview.md](../0001-brew-log-format/interview.md) (confirmation form;
 proposal cited the install card
-[session-20260730-061612-install-hnk-coffee-tracker](session-20260730-061612-install-hnk-coffee-tracker.md)).
+[session-20260815-160149-install-hnk-coffee-tracker](session-20260815-160149-install-hnk-coffee-tracker.md)).
 
 ## Key decisions
 
@@ -51,7 +51,7 @@ proposal cited the install card
   `strict-negative` for exactly this shape. Decided here, recorded in
   [invariants.md](../_global/invariants.md#inv-brew-001).
 - **Demonstration binary registered honestly**:
-  [media-20260730-061939-brew-log-sample](../_media/index.md#media-20260730-061939-brew-log-sample)
+  [media-20260815-160348-brew-log-sample](../_media/index.md#media-20260815-160348-brew-log-sample)
   is a single-pixel placeholder; its `alt` says exactly that, so the record
   claims no more than it is.
 - **No dictionary changes needed**: `brew-log` and the `BREW` NODE-ID domain
@@ -73,11 +73,11 @@ proposal cited the install card
 - .context/0001-brew-log-format/ai-spec.md (created, version 1)
 - .context/0001-brew-log-format/sources.md (created)
 - .context/_global/invariants.md (INV-BREW-001 row added, level strict-negative)
-- .context/_media/index.md (entry media-20260730-061939-brew-log-sample added; payload placed under the git-ignored media payload directory)
+- .context/_media/index.md (entry media-20260815-160348-brew-log-sample added; payload placed under the git-ignored media payload directory)
 - src/tracker.mjs (spec-node comment block for NODE-BREW-01)
 - src/report.mjs (spec-node comment block for NODE-BREW-03)
 - wiki/index.md (active-topics row + first History Annotation entry)
-- .context/_archive/sessions/session-20260730-061851-brew-log-format-specification.full.md (this session's raw, git-ignored)
+- .context/_archive/sessions/session-20260815-160252-brew-log-format-specification.full.md (this session's raw, git-ignored)
 - .context/_archive/index.md, llm.txt (regenerated at session end)
 
 ## Follow-ups
