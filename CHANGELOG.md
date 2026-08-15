@@ -77,8 +77,9 @@ Evidence: `scripts/self-test.mjs` gained the
 pinning the full contract (valid resolution, unknown id, dead link, missing
 summary, code-fence non-trigger, Living-layer target, quoted `type` value,
 CRLF stub, view-to-view rejection, duplicate-id interaction, and the stub
-living inside the Living layer itself, both directions) — suite 31 → 46,
-all green (44 at the merge; the last two are the pins below).
+living inside the Living layer itself, both directions) — suite 31 → 47,
+all green (44 at the compat-views merge, 46 after the pins below, 47 with
+the regression test under Fixed).
 
 Two follow-ups landed on the release branch before this cut. `skill/02`
 §11.3 gained the capability-first orientation rule: before weighing read
@@ -101,6 +102,25 @@ symlink claims are dated and measured, the guide's superpowers claims cite
 version and line numbers). P-items (`examples/` regeneration, SemVer bump)
 are release-cut concerns per the Release rule above; both ran at this cut
 (Release verification and Self-audit below).
+
+### Fixed
+
+**`sniffBinary` misread multibyte text as binary (`scripts/hnk.mjs`,
+folded in at this cut from commit `ce93511`).** The observed problem: the
+UTF-8 sniff trimmed a fixed 3 bytes before fatal decoding, in every case —
+but a complete file smaller than the 8 KiB sample has no boundary to
+tolerate, and the trim itself cut into a final multibyte character (and on
+a truncated 8 KiB read, a fixed trim can equally land mid-character).
+Observed in a real install: a complete Korean session card (6567 bytes)
+failed `verify` as "binary content outside `_media/files`" — a
+misclassification of exactly the records this system exists to keep. The
+structural fix: the boundary tolerance now applies only to truncated
+8 KiB reads, and walks back over the partial UTF-8 sequence (continuation
+bytes, then one incomplete lead byte) instead of trimming blindly.
+Evidence: regression test with three subchecks (complete CJK file,
+boundary-cut CJK file, NUL sanity) red on the previous implementation
+(pass 0 / fail 1, recorded in the fix commit), green after — suite
+46 → 47.
 
 ### Upgrade note
 
@@ -142,7 +162,8 @@ and excerpt id (card id changed by the regeneration, the same class the
 v1.1.0 audit caught); zero dead links in the `examples/` instance. This
 release's sweep counts every link occurrence and is not comparable to the
 v1.1.0 totals (333/172): run against the v1.1.0 tag it measures 632
-pointers (309 anchors), 0 dead. `self-test.mjs` 46/46. All 52 repository
+pointers (309 anchors), 0 dead. `self-test.mjs` 47/47, re-measured at cut
+after folding the sniffBinary fix (46/46 before the fold). All 52 repository
 frontmatter documents parse under the shipped subset parser with template
 `{{PLACEHOLDER}}` tokens resolved the way instantiation resolves them
 (the v1.1.0 methodology; 47 documents then). Freshness follow-ups fixed at
