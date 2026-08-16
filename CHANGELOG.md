@@ -22,7 +22,39 @@ Before every release tag:
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+**Living-layer verification blind spots closed (`scripts/hnk.mjs`;
+`skill/03` version 2 → 3).** The observed problem: the first target-project
+core-audit (R20) of a real brownfield install found `verify` blind to the
+Living layer on both axes — `llm.txt` staleness watched only `.context/`
+although `llm build` reads the Living layer too (03 §5.1), so Living edits
+silently staled the entry point; and Living-document links were never
+machine-checked, forcing that install's review cycle to hand-verify 172
+links a scan could have covered. The structural fix: the staleness scan now
+covers the full input scope, and a new **advisory-only** check warns on
+unresolved Living-layer relative links — deliberately never a failure,
+because the Living layer may hold adopted legacy documents whose links
+predate the install (audit-existing maps, never moves — 02 §10), so a
+brownfield target must not fail verification over inherited rot. Evidence:
+self-test 47 → 48; the new test proves warning-not-failure (exit 0 with the
+advisory line) and staleness firing on a Living-document touch; suite green
+on Node 24.
+
+**Installation learns from a real brownfield trial (`orchestrator.md`
+version 1 → 2).** The observed problem: a real install ran two paths the
+state machine did not name — the human forbade edits to existing files
+("build the new system, touch nothing else"), leaving the pointer block and
+trigger deferred and EC-1 as an accepted deviation the installer had to
+assemble from three separate clauses; and the human re-steered three Level 1
+answers mid-install while instantiation was underway. The structural fix:
+§2 names the **deferred-integration install variant** and step 3 names the
+**mid-install answer-change procedure** — both composed of existing
+mechanisms only (step-7 accepted deviation, step-8 card, the frozen
+`trigger` values of skill/10 §4.3, the convergence rule of skill/07 §6); no
+new interface, no new frozen value. Evidence: the install's session cards
+record both paths end-to-end, and the target later passed a full core-audit
+with the deviation honestly carried.
 
 ## [1.2.0] — 2026-08-16
 

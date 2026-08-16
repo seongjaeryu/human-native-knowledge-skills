@@ -1988,6 +1988,25 @@ function structureVerify(root, rep) {
         idFiles.get(id)?.push(`${livingPrefix}/${rel}`);
       }
     }
+    // Living-layer relative links — ADVISORY only (03 §6): the Living layer
+    // may hold adopted legacy documents whose links predate the install;
+    // audit-existing maps, never moves (02 §10), so a dead link here warns
+    // and never fails. Frontmatter-less docs are included: their links are
+    // part of retrieval too (N2).
+    for (const rel of walkFiles(livingDir, (d) => livingSkip.has(d.split('/').pop() ?? d))) {
+      if (!rel.endsWith('.md')) continue;
+      const docAbs = path.join(livingDir, rel);
+      const text = readText(docAbs);
+      for (const m of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+        const target = m[1];
+        if (/^(?:[a-z][a-z0-9+.-]*:|#|\/)/i.test(target)) continue; // absolute URL, scheme, pure anchor, or root-absolute
+        const relTarget = target.split('#')[0];
+        if (!relTarget) continue;
+        if (!exists(path.resolve(path.dirname(docAbs), relTarget))) {
+          rep.warn(`living-layer link unresolved (advisory): ${livingPrefix}/${rel} → ${target} (03 §4, N2)`);
+        }
+      }
+    }
   }
 
   // Compat views (02 §11): stubs outside .context/ resolve by id. Two-phase
@@ -2043,7 +2062,9 @@ function structureVerify(root, rep) {
     if (files.length > 1) rep.fail(`duplicate id ${id} across: ${files.join(', ')} (03 §6)`);
   }
 
-  // llm.txt existence + staleness (03 §5.3)
+  // llm.txt existence + staleness (03 §5.3). The staleness scan covers the
+  // whole `llm build` input scope — .context/ AND the Living layer (03 §5.1):
+  // watching only .context/ let Living edits silently stale the entry point.
   if (!exists(P.llmTxt)) {
     rep.fail('llm.txt missing — run `node scripts/hnk.mjs llm build` (03 §5)');
   } else {
@@ -2053,6 +2074,16 @@ function structureVerify(root, rep) {
     for (const rel of committedContextDocs(root)) {
       const m = fs.statSync(path.join(root, rel)).mtimeMs;
       if (m > newest) { newest = m; newestPath = rel; }
+    }
+    const staleLivingDir = livingLayerDir(root);
+    if (staleLivingDir && exists(staleLivingDir)) {
+      const prefix = path.relative(root, staleLivingDir).split(path.sep).join('/');
+      const skip = new Set(['.git', 'node_modules']);
+      for (const rel of walkFiles(staleLivingDir, (d) => skip.has(d.split('/').pop() ?? d))) {
+        if (!rel.endsWith('.md')) continue;
+        const m = fs.statSync(path.join(staleLivingDir, rel)).mtimeMs;
+        if (m > newest) { newest = m; newestPath = `${prefix}/${rel}`; }
+      }
     }
     if (newest > llmM) {
       rep.warn(`llm.txt is stale: ${newestPath} changed after the last \`llm build\` (03 §5.3) — regenerate`);

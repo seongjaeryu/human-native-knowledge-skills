@@ -600,6 +600,33 @@ test('end-to-end target project flow', async (t) => {
     runCli(root, ['llm', 'build']); // refresh llm.txt after the touch
   });
 
+  await t.test('living layer: dead links warn (advisory, exit 0); llm staleness covers living docs', () => {
+    // A dead relative link in a Living document is ADVISORY — adopted legacy
+    // docs make failures wrong here (02 §10); retrieval still flags it (N2).
+    const dead = path.join(root, 'wiki/dead-link-note.md');
+    fs.writeFileSync(dead, '# note\n\nSee [missing](no-such-file.md) and [ok](notes.md).\n');
+    let r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out); // warning must never become a failure
+    assert.ok(r.out.includes('living-layer link unresolved (advisory): wiki/dead-link-note.md → no-such-file.md'), r.out);
+    assert.ok(!r.out.includes('→ notes.md'), 'resolving links must not warn');
+    fs.rmSync(dead);
+    runCli(root, ['llm', 'build']);
+
+    // Staleness scope = the llm build input scope (03 §5.1): a Living doc
+    // newer than llm.txt must warn, exactly like a .context/ doc.
+    const notes = path.join(root, 'wiki/notes.md');
+    const future = new Date(Date.now() + 5_000);
+    fs.utimesSync(notes, future, future);
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    assert.ok(r.out.includes('llm.txt is stale: wiki/notes.md'), r.out);
+    const past = new Date(Date.now() - 5_000);
+    fs.utimesSync(notes, past, past);
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    assert.ok(!r.out.includes('llm.txt is stale'), r.out);
+  });
+
   await t.test('archive verify: sha mismatch and raw-lost proposal', () => {
     const original = fs.readFileSync(rawPath());
     fs.appendFileSync(rawPath(), '\ntampered\n');
