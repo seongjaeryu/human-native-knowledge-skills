@@ -56,7 +56,9 @@ pointer block and trigger wiring of step 6, record the environment row with
 `trigger: declined` and the entry-file deferral noted
 ([`skill/10` §4.3](skill/10-environment-integration.md#43-the-integration-record--frozen-interface)),
 record the unmet EC-1 as an **accepted deviation** in the step-7 checklist
-and the step-8 card, and tell the human the activation cost: until the
+and the step-8 card (step 6's own Done-when is left unmet by design — the
+step-7 acceptance clause carries it), and tell the human the activation
+cost: until the
 pointer block lands, each session must be pointed at
 `.context/_global/orchestrator.md` explicitly. The gitignore block of step 5
 is the one edit to keep even in a trial — without it, raw transcripts can be
@@ -121,14 +123,16 @@ committed. Integration is completed later by re-running step 6.
   `hnk` registration row of
   [`skill/05` §3.3–3.4](skill/05-dictionary-and-naming.md#33-default-seed-rows-proposals-not-law)).
 - **Mid-install answer changes are normal, not exceptions.** The human may
-  re-steer confirmed answers while later steps are underway (a different
-  Living-layer choice, a viewer added, a new constraint). Re-confirm only
-  the affected answers — never the whole interview again
-  ([`skill/07` §6](skill/07-pre-interview.md#6-convergence--the-one-line-proposal)) —
-  apply the delta to every artifact already instantiated from the old
-  answer, update the profile, and record each change with its reason in the
-  step-8 card's Key decisions (audit item F2: a re-steered answer is a
-  confirmed change, not a silent one).
+  re-steer confirmed answers — or answer a bulk-confirmed proposal late —
+  while later steps are underway (a viewer named after confirmation, a new
+  constraint such as "touch nothing existing", a branch-isolation request).
+  Re-confirm only the affected answers — never the whole interview again;
+  this is the install-time form of the safe re-run rule
+  ([`skill/07` §2.2](skill/07-pre-interview.md#22-conduct-rules)) — apply
+  the delta to every artifact already instantiated from the old answer,
+  update the profile, and record each change with its reason in the step-8
+  card's Key decisions (audit item F2: a re-steered answer is a confirmed
+  change, not a silent one).
 - **Done when:** the profile exists with all eight answers recorded and
   valid machine-subset frontmatter
   ([`skill/03` §3](skill/03-okf.md#3-the-machine-readable-subset-grammar)),
@@ -297,15 +301,17 @@ target audit ([`core/audit.md`](core/audit.md)).
   **Why:** a real brownfield install ran exactly these two paths with no
   spec to name them — the human forbade edits to existing files (pointer
   block and trigger deferred; EC-1 ended as an accepted deviation the
-  installer had to assemble from three separate clauses), and re-steered
-  three Level 1 answers mid-install (Living layer, viewer, the no-edit
-  constraint itself) while instantiation was underway. **How:** both paths
-  are named using existing mechanisms only — the step-7 accepted-deviation
-  clause, the step-8 card, the frozen `trigger` values of `skill/10` §4.3,
-  and the convergence rule of `skill/07` §6; no new interface, no new
-  frozen value. Evidence: the install's session cards record both paths
-  end-to-end, and the target passed a full core-audit (R20) with the
-  deviation honestly carried.
+  installer had to assemble from separate clauses), and re-steered the
+  plan three times between confirming the interview and instantiation:
+  a viewer named after the bulk confirmation (changing the proposed
+  value), a branch-isolation request, and the no-edit constraint itself.
+  **How:** both paths are named using existing mechanisms only — the
+  step-7 accepted-deviation clause, the step-8 card, the frozen `trigger`
+  values of `skill/10` §4.3, and the safe re-run rule of `skill/07` §2.2;
+  no new interface, no new frozen value. Evidence: the install's session
+  card records the deferral and each plan change as Key decisions, and
+  the target later passed a full core-audit (R20) with the deviation
+  honestly carried.
 - **version 1** — initial root installation state machine, written against
   [`core/philosophy.md`](core/philosophy.md) version 1 and the frozen
   milestone-M2 interfaces of `skill/02`, `03`, `07`, `08`, and `10`.
