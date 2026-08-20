@@ -1988,6 +1988,39 @@ function structureVerify(root, rep) {
         idFiles.get(id)?.push(`${livingPrefix}/${rel}`);
       }
     }
+    // Living-layer relative links — ADVISORY only (03 §6): the Living layer
+    // may hold adopted legacy documents whose links predate the install;
+    // audit-existing maps, never moves (02 §10), so a dead link here warns
+    // and never fails. Frontmatter-less docs are included: their links are
+    // part of retrieval too (N2).
+    for (const rel of walkFiles(livingDir, (d) => livingSkip.has(d.split('/').pop() ?? d))) {
+      if (!rel.endsWith('.md')) continue;
+      const docAbs = path.join(livingDir, rel);
+      try {
+        const { fm } = parseDocument(readText(docAbs));
+        if (fm.entries.type && fm.entries.type.value === 'view') continue; // the view scan owns stubs at FAIL level — no double report
+      } catch { /* adopted frontmatter-less docs still get the advisory */ }
+      // Code spans are not links: drop fenced blocks and inline code before
+      // scanning, or every documentation example would warn.
+      const text = readText(docAbs)
+        .replace(/^```[\s\S]*?^```/gm, '')
+        .replace(/`[^`\n]*`/g, '');
+      for (const m of text.matchAll(/\]\(([^)\s]+)\)/g)) {
+        let target = m[1];
+        if (target.startsWith('<') && target.endsWith('>')) target = target.slice(1, -1); // CommonMark <destination>
+        if (/^(?:[a-z][a-z0-9+.-]*:|#|\/)/i.test(target)) continue; // absolute URL, scheme, pure anchor, or root-absolute
+        let relTarget = target.split('#')[0].split('?')[0];
+        if (!relTarget) continue;
+        try { relTarget = decodeURIComponent(relTarget); } catch { /* malformed escape — check the raw form */ }
+        // Two resolutions before warning: relative to the document (03 §4),
+        // then project-root-relative — the referenced_by convention of
+        // 09 §4.1, which authors also use in bodies.
+        if (!exists(path.resolve(path.dirname(docAbs), relTarget)) &&
+            !exists(path.resolve(root, relTarget))) {
+          rep.warn(`living-layer link unresolved (advisory): ${livingPrefix}/${rel} → ${m[1]} (03 §4, N2)`);
+        }
+      }
+    }
   }
 
   // Compat views (02 §11): stubs outside .context/ resolve by id. Two-phase
@@ -2043,7 +2076,9 @@ function structureVerify(root, rep) {
     if (files.length > 1) rep.fail(`duplicate id ${id} across: ${files.join(', ')} (03 §6)`);
   }
 
-  // llm.txt existence + staleness (03 §5.3)
+  // llm.txt existence + staleness (03 §5.3). The staleness scan covers the
+  // whole `llm build` input scope — .context/ AND the Living layer (03 §5.1):
+  // watching only .context/ let Living edits silently stale the entry point.
   if (!exists(P.llmTxt)) {
     rep.fail('llm.txt missing — run `node scripts/hnk.mjs llm build` (03 §5)');
   } else {
@@ -2053,6 +2088,25 @@ function structureVerify(root, rep) {
     for (const rel of committedContextDocs(root)) {
       const m = fs.statSync(path.join(root, rel)).mtimeMs;
       if (m > newest) { newest = m; newestPath = rel; }
+    }
+    // Clone-safety tolerance for the Living branch only: a fresh checkout
+    // writes files in path order, so a Living path that sorts after llm.txt
+    // (wiki/ does; docs/ sorts before and never had the skew) gets an mtime
+    // a hair newer in every clone — an exact comparison would cry stale on
+    // untouched copies (a false claim). Parallel checkouts void ordering
+    // guarantees entirely, so the tolerance covers the whole Living branch.
+    // A real edit lands well past this window. The .context/ comparison
+    // stays exact (it sorts before llm.txt).
+    const LIVING_STALENESS_TOLERANCE_MS = 2_000;
+    const staleLivingDir = livingLayerDir(root);
+    if (staleLivingDir && exists(staleLivingDir)) {
+      const prefix = path.relative(root, staleLivingDir).split(path.sep).join('/');
+      const skip = new Set(['.git', 'node_modules']);
+      for (const rel of walkFiles(staleLivingDir, (d) => skip.has(d.split('/').pop() ?? d))) {
+        if (!rel.endsWith('.md')) continue;
+        const m = fs.statSync(path.join(staleLivingDir, rel)).mtimeMs;
+        if (m > llmM + LIVING_STALENESS_TOLERANCE_MS && m > newest) { newest = m; newestPath = `${prefix}/${rel}`; }
+      }
     }
     if (newest > llmM) {
       rep.warn(`llm.txt is stale: ${newestPath} changed after the last \`llm build\` (03 §5.3) — regenerate`);

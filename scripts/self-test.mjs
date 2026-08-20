@@ -600,6 +600,91 @@ test('end-to-end target project flow', async (t) => {
     runCli(root, ['llm', 'build']); // refresh llm.txt after the touch
   });
 
+  await t.test('living layer: dead links warn (advisory, exit 0); llm staleness covers living docs', () => {
+    // A dead relative link in a Living document is ADVISORY — adopted legacy
+    // docs make failures wrong here (02 §10); retrieval still flags it (N2).
+    const dead = path.join(root, 'wiki/dead-link-note.md');
+    fs.writeFileSync(dead, '# note\n\nSee [missing](no-such-file.md) and [ok](notes.md).\n');
+    let r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out); // warning must never become a failure
+    assert.ok(r.out.includes('living-layer link unresolved (advisory): wiki/dead-link-note.md → no-such-file.md'), r.out);
+    assert.ok(!r.out.includes('→ notes.md'), 'resolving links must not warn');
+    fs.rmSync(dead);
+    runCli(root, ['llm', 'build']);
+
+    // Staleness scope = the llm build input scope (03 §5.1): a Living doc
+    // newer than llm.txt must warn, exactly like a .context/ doc.
+    const notes = path.join(root, 'wiki/notes.md');
+    const future = new Date(Date.now() + 5_000);
+    fs.utimesSync(notes, future, future);
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    assert.ok(r.out.includes('llm.txt is stale: wiki/notes.md'), r.out);
+    const past = new Date(Date.now() - 5_000);
+    fs.utimesSync(notes, past, past);
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    assert.ok(!r.out.includes('llm.txt is stale'), r.out);
+
+    // Link-scan hygiene: schemes, anchors, and root-absolute targets are
+    // skipped; encoded, angle-bracketed, fragment, and code-span "links"
+    // must not warn either — advisory credibility is the whole point.
+    fs.writeFileSync(path.join(root, 'wiki/spaced file.md'), '# t\n');
+    const hygiene = path.join(root, 'wiki/hygiene.md');
+    fs.writeFileSync(hygiene, [
+      '# h',
+      '[w](https://example.com/x.md) [m](mailto:a@b.c) [a](#sec) [r](/abs.md)',
+      '[enc](spaced%20file.md) [ang](<notes.md>) [frag](notes.md#top)',
+      '```',
+      '[fake](fenced-missing.md)',
+      '```',
+      'and `[fake](inline-missing.md)` done.',
+      '',
+    ].join('\n'));
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 0, r.out);
+    assert.ok(!r.out.includes('living-layer link'), r.out);
+    fs.rmSync(hygiene);
+    fs.rmSync(path.join(root, 'wiki/spaced file.md'));
+
+    // Asymmetry pin: .context/ stays EXACT while the Living branch tolerates
+    // 2s of checkout skew — a regression that blanket-applies the tolerance
+    // to .context/, or drops it from Living, fails here.
+    const llmM = fs.statSync(path.join(root, 'llm.txt')).mtimeMs;
+    const ctxDoc = path.join(root, '.context/_global/project-profile.md');
+    const inTol = new Date(llmM + 1_000);
+    const before = new Date(llmM - 1_000);
+    fs.utimesSync(ctxDoc, inTol, inTol);
+    r = runCli(root, ['verify']);
+    assert.ok(r.out.includes('llm.txt is stale'), '.context comparison must stay exact: ' + r.out);
+    fs.utimesSync(ctxDoc, before, before);
+    fs.utimesSync(notes, inTol, inTol); // living +1s: inside the tolerance — quiet
+    r = runCli(root, ['verify']);
+    assert.ok(!r.out.includes('llm.txt is stale'), 'living tolerance must absorb checkout skew: ' + r.out);
+    const outTol = new Date(llmM + 2_500);
+    fs.utimesSync(notes, outTol, outTol); // living +2.5s: past the tolerance — fires
+    r = runCli(root, ['verify']);
+    assert.ok(r.out.includes('llm.txt is stale: wiki/notes.md'), r.out);
+    fs.utimesSync(notes, before, before);
+    r = runCli(root, ['verify']);
+    assert.ok(!r.out.includes('llm.txt is stale'), r.out);
+
+    // A view stub in the Living layer belongs to the view scan (FAIL level):
+    // its dead body link must not ALSO surface as a living-layer advisory.
+    const stub = path.join(root, 'wiki/legacy-stub.md');
+    fs.writeFileSync(stub, [
+      '---', 'id: view-selftest-living-stub', 'type: view', 'status: active',
+      'resolves_to: project-profile', 'summary: "Stub for the double-report pin."', '---',
+      '', 'Authoritative: [gone](stub-target-missing.md)', '',
+    ].join('\n'));
+    r = runCli(root, ['verify']);
+    assert.equal(r.code, 1, r.out); // view scan fails the dead link
+    assert.ok(r.out.includes('dead semantic pointer'), r.out);
+    assert.ok(!r.out.includes('living-layer link'), 'view stubs must not double-report: ' + r.out);
+    fs.rmSync(stub);
+    runCli(root, ['llm', 'build']);
+  });
+
   await t.test('archive verify: sha mismatch and raw-lost proposal', () => {
     const original = fs.readFileSync(rawPath());
     fs.appendFileSync(rawPath(), '\ntampered\n');

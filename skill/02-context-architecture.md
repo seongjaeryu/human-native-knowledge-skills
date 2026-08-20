@@ -2,7 +2,7 @@
 id: skill-02-context-architecture
 type: skill
 status: active
-version: 3
+version: 4
 related: [core-philosophy, core-audit, skill-01-principles, skill-03-okf, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-08-conversation-archive, skill-09-visual-assets]
 summary: "Structural specification of an installed target project: three-level .context/ inheritance, central archive and media stores, flat topic folders, the Living layer, and the gitignore contract."
 ---
@@ -307,7 +307,8 @@ Direct human edits follow the rule of
 document; frontmatter machine-subset compliance and pointer resolution
 ([`03-okf.md`](03-okf.md)); unregistered binaries
 ([`09-visual-assets.md`](09-visual-assets.md)); `llm.txt` staleness relative
-to `.context/`; Living layer existence matching the location recorded in
+to its build input scope ([`03-okf.md` §5.3](03-okf.md#53-regeneration-and-staleness));
+Living layer existence matching the location recorded in
 `project-profile.md` ([`06-lifecycle-and-versioning.md`](06-lifecycle-and-versioning.md));
 and the presence of the gitignore block of section 8.
 
@@ -461,6 +462,12 @@ exactly the consumer it exists to orient (N2).
 
 ## Version History
 
+- **version 4** — 2026-08-16. One §7 wording alignment, no rule change:
+  the integrity-net summary described `llm.txt` staleness as "relative to
+  `.context/`", which [`03-okf.md`](03-okf.md) version 3 widened to the
+  full build input scope (`.context/` plus the Living layer). The summary
+  now points at 03 §5.3 instead of restating a scope that had gone stale —
+  the kind of cross-reference drift this system exists to prevent.
 - **version 3** — 2026-08-01. Added §11 (compat views), the optional
   `plan.md` row in §4.1, and the matching §1 derivation row. **Why:**
   plan-writing agent skills (observed: superpowers `writing-plans` and

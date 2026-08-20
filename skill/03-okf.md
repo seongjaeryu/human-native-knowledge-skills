@@ -2,7 +2,7 @@
 id: skill-03-okf
 type: skill
 status: active
-version: 2
+version: 3
 related: [core-philosophy, core-audit, skill-01-principles, skill-02-context-architecture, skill-04-diagram-first, skill-05-dictionary-and-naming, skill-06-lifecycle-and-versioning, skill-07-pre-interview, skill-08-conversation-archive, skill-09-visual-assets]
 summary: "Open Knowledge Format: common frontmatter, the machine-readable subset grammar (M2 freeze), semantic pointers, and llm.txt generation for target projects."
 ---
@@ -234,7 +234,8 @@ respecting [INV-SEC-001](../_shared_ai/invariants.md#inv-sec-001).
 The bad form forces every later reader to guess which device, which
 authentication, and which rule. The good form is a knowledge graph edge: the
 AI resolves it mechanically, the human clicks it. Dead pointers are a
-verification failure (audit item N2).
+verification failure (audit item N2) — except inside adopted Living-layer
+documents, where the same rot is reported as an advisory warning (§6).
 
 ## 5. llm.txt
 
@@ -283,9 +284,12 @@ Regeneration is a standing orchestrator rule, owned by
 [08-conversation-archive.md](08-conversation-archive.md): at every milestone
 or session end, the AI runs `node scripts/hnk.mjs archive index` and then
 `node scripts/hnk.mjs llm build`. `node scripts/hnk.mjs verify` warns when
-`llm.txt` is older than the newest change under `.context/` (audit item N4 in
-[`core/audit.md`](../core/audit.md)) — a stale entry point misleads exactly
-the consumer it exists to orient.
+`llm.txt` is older than the newest change in its **input scope** —
+`.context/` or the Living layer (§5.1) — per audit item N4 in
+[`core/audit.md`](../core/audit.md). A small tolerance on the Living
+comparison absorbs the mtime skew a fresh checkout writes (files land in
+path order), so untouched clones stay quiet. A stale entry point misleads
+exactly the consumer it exists to orient.
 
 ### 5.4 This repository: hand-maintained (the asymmetry)
 
@@ -304,13 +308,33 @@ session.
 | subset grammar (§3) | frontmatter the zero-dependency parser cannot round-trip | N2 |
 | duplicate `id` | the machine layer's path-independent references become ambiguous | N2 |
 | dead semantic pointers (§4) — file targets; `#anchor` resolution is audit-level in v1 | a knowledge graph edge an nth-degree consumer cannot follow | N2 |
-| `llm.txt` staleness (§5.3) | the entry point misrepresents the current state | N4 |
+| `llm.txt` staleness (§5.3) — input scope: `.context/` and the Living layer | the entry point misrepresents the current state | N4 |
+| unresolved Living-layer relative links (§4) — **advisory warning, never a failure** | a Living document links a missing file; the Living layer may hold adopted legacy documents (§5.1), so retrieval flags the rot without failing the install | N2 |
 
-All four checks run inside `node scripts/hnk.mjs verify`; the audit items are
+All five checks run inside `node scripts/hnk.mjs verify`; the audit items are
 defined in [`core/audit.md`](../core/audit.md).
 
 ## Version History
 
+- **version 3** — 2026-08-16. Staleness scope aligned with the build input
+  scope, and Living-layer links gained an advisory check (§5.3, §6).
+  **Why:** a target-project audit of a real brownfield install found two
+  verification blind spots — `llm.txt` staleness watched only `.context/`
+  although `llm build` reads the Living layer too (§5.1), so Living edits
+  silently staled the entry point; and Living-document links were never
+  machine-checked, forcing a review pass to hand-verify 172 links whose
+  file targets a scan could have covered (anchor resolution stays
+  audit-level, §6). **How:** the staleness scan now covers the full input
+  scope with a small clone-skew tolerance on the Living comparison (§5.3),
+  and a new **advisory-only** warning reports unresolved Living-layer
+  relative links — never a failure, because the Living layer may hold
+  adopted legacy documents whose links predate the install (audit-existing
+  maps, never moves —
+  [02 §10](02-context-architecture.md#10-installation-and-existing-assets));
+  view stubs are excluded (the view scan already fails their dead links).
+  Evidence: self-test 47 → 48 (the new test proves warning-not-failure,
+  staleness firing on a Living-document touch, the exact/tolerant
+  asymmetry, and the no-double-report rule for stubs), suite green.
 - **version 2** — 2026-08-01. Added the `view` type to the §2.2 enum;
   its `resolves_to` field is owned by
   [02-context-architecture.md](02-context-architecture.md) §11 per the
